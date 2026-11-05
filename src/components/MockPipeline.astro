@@ -1,0 +1,95 @@
+---
+import MockWindow from './MockWindow.astro';
+
+const columns = [
+  { name: 'Sourced', cards: [{ n: 'J. Alvarez', r: 'Journeyman electrician' }, { n: 'K. Osei', r: 'Dispatcher' }] },
+  { name: 'Screened', cards: [{ n: 'T. Nguyen', r: 'HVAC tech, EPA 608' }] },
+  { name: 'Submitted', cards: [{ n: 'M. Brooks', r: 'Project manager', hot: true }, { n: 'S. Reyes', r: 'Office admin' }] },
+  { name: 'Placed', cards: [{ n: 'A. Kim', r: 'Service plumber' }] },
+];
+---
+
+<MockWindow title="Pipeline — Open job orders">
+  <div class="pipe">
+    {columns.map((c) => (
+      <div class="pipe__col">
+        <div class="pipe__head">
+          {c.name} <span>{c.cards.length}</span>
+        </div>
+        {c.cards.map((card) => (
+          <div class:list={['pipe__card', { 'pipe__card--hot': card.hot }]}>
+            <b>{card.n}</b>
+            <span>{card.r}</span>
+          </div>
+        ))}
+      </div>
+    ))}
+  </div>
+  <div class="pipe__foot">
+    <span>Follow-ups due today: <b>3</b></span>
+    <span>Placements this month: <b>7</b></span>
+  </div>
+</MockWindow>
+
+<style>
+  .pipe {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .pipe__col {
+    display: grid;
+    align-content: start;
+    gap: 5px;
+    min-width: 0;
+  }
+  .pipe__head {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pipe__head span {
+    color: var(--faint);
+  }
+  .pipe__card {
+    display: grid;
+    gap: 2px;
+    padding: 7px 8px;
+    background: #1a1410;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    min-width: 0;
+  }
+  .pipe__card b,
+  .pipe__card span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pipe__card span {
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .pipe__card--hot {
+    border-color: rgba(255, 106, 31, 0.6);
+  }
+  .pipe__foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .pipe__foot b {
+    color: var(--gold);
+  }
+</style>

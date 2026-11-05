@@ -1,0 +1,26 @@
+{
+  "name": "hephaestus",
+  "version": "0.1.0",
+  "description": "Marketing site for Vulcan — custom business software, forged once, yours forever.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^7.4.6",
+    "stripe": "^23.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@netlify/functions": "^6.1.0",
+    "@types/node": "^22.20.5",
+    "typescript": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

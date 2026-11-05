@@ -1,0 +1,479 @@
+---
+import Base from '../layouts/Base.astro';
+import PackageCard from '../components/PackageCard.astro';
+import MockDispatch from '../components/MockDispatch.astro';
+import MockPipeline from '../components/MockPipeline.astro';
+import MockBooking from '../components/MockBooking.astro';
+import { packages, formatUsd, DEPOSIT_USD } from '../data/packages';
+import { industries } from '../data/industries';
+import { site } from '../data/site';
+
+const capabilities = [
+  { name: 'CRM', text: 'Every customer, every contact, every job — in one record your whole team can see.' },
+  { name: 'Scheduling & dispatch', text: 'Drag a job onto a tech. They get a text. The customer gets a window.' },
+  { name: 'Online booking', text: 'Customers pick a slot and pay in advance from their phone, day or night.' },
+  { name: 'Digital work tickets', text: 'Photos, parts, signature, done — written in the field in a few taps.' },
+  { name: 'Equipment tracking', text: 'Serials, service history and photos for every machine you maintain.' },
+  { name: 'Crew coordination', text: 'Subs, crews and the office see the same schedule and the same notes.' },
+  { name: 'Quotes & invoices', text: 'Send a clean quote from the driveway. Get paid by card before you leave.' },
+  { name: 'Inventory', text: 'What is on the truck, in the shop and on order — updated by the tickets.' },
+  { name: 'Training', text: 'We train your office and your techs on their own devices.' },
+  { name: 'Reporting', text: 'Revenue, jobs per tech, open invoices. The numbers you run the business on.' },
+];
+
+const steps = [
+  {
+    n: '01',
+    title: 'Free demo',
+    text: 'Call or email. We walk you through working sample builds and talk about how your business actually runs. No slide deck.',
+  },
+  {
+    n: '02',
+    title: 'Reserve your slot',
+    text: `A ${formatUsd(DEPOSIT_USD)} deposit holds your place in the build queue. It comes straight off your final price.`,
+  },
+  {
+    n: '03',
+    title: 'We forge it around you',
+    text: 'You get a written scope and a fixed one-time price. Then we build, with check-ins so nothing surprises you.',
+  },
+  {
+    n: '04',
+    title: 'Handover. It is yours.',
+    text: 'We set it up, train your team and hand you the keys. Optional support if you want us on call. No required subscription, ever.',
+  },
+];
+
+const faqs = [
+  {
+    q: 'Do I really own it?',
+    a: 'Yes. The code, the data and the accounts it runs on are all in your name. If we disappeared tomorrow, your system would keep running.',
+  },
+  {
+    q: 'One-time payment — what is the catch?',
+    a: 'There is not one, but there is one honest detail: features that store photos, documents or equipment history online need a database and file storage. We set that up in an account you own, so you pay the provider directly, usually $0 to $25 a month for a small business. You never pay Vulcan a subscription.',
+  },
+  {
+    q: 'What if I need changes later?',
+    a: 'Your call. Pay for changes as you need them, or pick an optional support plan if you want us on call. Neither is required.',
+  },
+  {
+    q: 'How long does a build take?',
+    a: 'Most starter packages take three to six weeks from deposit to handover, depending on scope. You will know the timeline before any work starts.',
+  },
+  {
+    q: 'Is the deposit refundable?',
+    a: 'If we decide together before work starts that this is not the right fit, the deposit is refunded in full.',
+  },
+  {
+    q: 'My business is not on your list. Can you still build for me?',
+    a: 'Almost certainly. If you have customers who come back, jobs to schedule, or people to coordinate, we can build around it. Book a demo and tell us how you work.',
+  },
+];
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__copy">
+        <p class="eyebrow">Custom business software · One-time payment</p>
+        <h1>Tools for your trade.<br />Forged once. Yours forever.</h1>
+        <p class="lede">
+          Vulcan builds the CRM, scheduling, booking and work-ticket system your business actually needs,
+          around the way you already work. One payment. No subscriptions. No per-user fees. You own it.
+        </p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="/contact">Book a free demo</a>
+          <a class="btn btn--ghost" href="/packages">See packages &amp; pricing</a>
+        </div>
+        <p class="hero__trust faint">
+          Field service · Recruiting · Bookings &amp; tours · Any business with customers who come back
+        </p>
+      </div>
+      <div class="hero__visual">
+        <MockDispatch />
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem -->
+  <section class="section section--alt">
+    <div class="container">
+      <p class="eyebrow">Still running on paper?</p>
+      <h2>The clipboard is costing you customers.</h2>
+      <div class="grid grid--3 problem">
+        <div class="card">
+          <h3>Handwritten tickets</h3>
+          <p class="muted">
+            They get lost, they get wet, and nobody back at the office can read them. A tech should write a
+            ticket in four taps and have it in the customer's file before leaving the driveway.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Phone tag for bookings</h3>
+          <p class="muted">
+            Every missed call is a customer who booked with someone else. Let them book and pay online while
+            you are busy doing the work.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Looking smaller than you are</h3>
+          <p class="muted">
+            A confirmation text, a clean invoice, a record of every visit. That is what makes a customer
+            trust you over the guy with the magnet sign.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Capabilities -->
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">What we forge</p>
+      <h2>Everything your office and your crew need, in one system.</h2>
+      <p class="lede">Start with a package. Add what your business needs. Leave out what it does not.</p>
+      <div class="grid grid--4 caps">
+        {capabilities.map((c) => (
+          <div class="caps__item">
+            <h3>{c.name}</h3>
+            <p class="muted">{c.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section class="section section--alt" id="packages">
+    <div class="container">
+      <p class="eyebrow">Starter packages</p>
+      <h2>Pick your trade. We build from there.</h2>
+      <p class="lede">
+        Every package is a starting point, not a box. Add equipment tracking, inventory, training, a customer
+        portal, or the thing only your business does.
+      </p>
+      <div class="grid grid--3 pkgs">
+        {packages.map((p) => (
+          <PackageCard pkg={p} featured={p.id === 'field-service'} />
+        ))}
+      </div>
+      <p class="pkgs__more">
+        <a href="/packages">Full package details and add-ons &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" id="how">
+    <div class="container">
+      <p class="eyebrow">How it works</p>
+      <h2>From first call to handover.</h2>
+      <ol class="steps">
+        {steps.map((s) => (
+          <li class="steps__item">
+            <span class="steps__n">{s.n}</span>
+            <h3>{s.title}</h3>
+            <p class="muted">{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Demos -->
+  <section class="section section--alt" id="demos">
+    <div class="container">
+      <p class="eyebrow">See it working</p>
+      <h2>Sample builds, not screenshots of someone else's software.</h2>
+      <p class="lede">
+        Three fictional businesses, built the way we would build yours. Book a demo and we walk you through
+        them live.
+      </p>
+      <div class="grid grid--3 demos">
+        <div>
+          <MockDispatch />
+          <p class="demos__cap"><b>Ironclad HVAC</b> · dispatch board and digital tickets</p>
+        </div>
+        <div>
+          <MockBooking />
+          <p class="demos__cap"><b>Harbor &amp; Keel Charters</b> · online booking with prepayment</p>
+        </div>
+        <div>
+          <MockPipeline />
+          <p class="demos__cap"><b>Northstar Staffing</b> · candidate pipeline and follow-ups</p>
+        </div>
+      </div>
+      <p class="pkgs__more"><a href="/demos">More about the sample builds &rarr;</a></p>
+    </div>
+  </section>
+
+  <!-- One payment -->
+  <section class="section">
+    <div class="container once">
+      <div>
+        <p class="eyebrow">One payment</p>
+        <h2>No subscriptions. No per-seat fees. No rent on your own tools.</h2>
+      </div>
+      <div class="once__copy">
+        <p>
+          Most software for small business is rented: a monthly fee per user, forever, for a tool that was
+          built for someone else. Add a tech, pay more. Stop paying, lose your data.
+        </p>
+        <p>
+          Vulcan builds your system once, around how you work, for a fixed one-time price. The code, the data
+          and the accounts are yours. Keep it as long as you like. Change it when you need to. Pay for
+          support only if you want it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries -->
+  <section class="section section--alt">
+    <div class="container">
+      <p class="eyebrow">Who we build for</p>
+      <h2>Any business with customers who come back.</h2>
+      <div class="grid grid--2 inds">
+        {industries.map((g) => (
+          <div>
+            <h3 class="inds__h">{g.title}</h3>
+            <div class="inds__pills">
+              {g.items.map((i) => (
+                <span class="pill">{i}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container faq">
+      <p class="eyebrow">Questions</p>
+      <h2>Straight answers.</h2>
+      <div class="faq__list">
+        {faqs.map((f) => (
+          <details class="faq__item">
+            <summary>{f.q}</summary>
+            <p class="muted">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta">
+    <div class="container cta__inner">
+      <h2>Ready to put the clipboard down?</h2>
+      <p class="lede">A free demo takes twenty minutes. Call, email, or send a note and we will set it up.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="/contact">Book a free demo</a>
+        <a class="btn btn--ghost" href={site.phoneHref}>Call {site.phone}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    padding-block: clamp(56px, 9vw, 120px) clamp(48px, 7vw, 96px);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: -20% -10% auto;
+    height: 120%;
+    background:
+      radial-gradient(60% 50% at 75% 35%, rgba(255, 106, 31, 0.22), transparent 70%),
+      radial-gradient(40% 40% at 20% 80%, rgba(233, 169, 75, 0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (min-width: 960px) {
+    .hero__inner {
+      grid-template-columns: 1.1fr 1fr;
+    }
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 24px 0 18px;
+  }
+  .hero__trust {
+    font-size: 0.92rem;
+    margin: 0;
+  }
+  .hero__visual {
+    filter: drop-shadow(0 0 40px rgba(255, 106, 31, 0.18));
+  }
+
+  .problem {
+    margin-top: 28px;
+  }
+
+  .caps {
+    margin-top: 32px;
+  }
+  .caps__item {
+    padding: 18px 18px 14px;
+    border-top: 2px solid var(--bronze);
+  }
+  .caps__item h3 {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+  .caps__item p {
+    font-size: 0.95rem;
+    margin: 0;
+  }
+
+  .pkgs {
+    margin-top: 36px;
+    align-items: stretch;
+  }
+  .pkgs__more {
+    margin: 22px 0 0;
+    font-weight: 600;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+    counter-reset: step;
+  }
+  .steps__item {
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .steps__n {
+    font-family: var(--font-display);
+    color: var(--ember);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 10px;
+  }
+  .steps__item h3 {
+    font-size: 1.1rem;
+  }
+  .steps__item p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .demos {
+    margin-top: 32px;
+    align-items: start;
+  }
+  .demos__cap {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .demos__cap b {
+    color: var(--text);
+  }
+
+  .once {
+    display: grid;
+    gap: 24px 48px;
+  }
+  @media (min-width: 900px) {
+    .once {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+    }
+  }
+  .once__copy {
+    color: var(--muted);
+    font-size: 1.05rem;
+  }
+
+  .inds {
+    margin-top: 28px;
+    gap: 28px;
+  }
+  .inds__h {
+    font-size: 1rem;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .inds__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .faq {
+    max-width: 820px;
+  }
+  .faq__list {
+    margin-top: 20px;
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+    padding: 4px 0;
+  }
+  .faq__item summary {
+    cursor: pointer;
+    padding: 16px 0;
+    font-weight: 600;
+    font-size: 1.05rem;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__item summary::after {
+    content: '+';
+    color: var(--ember);
+    font-weight: 400;
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+  .faq__item[open] summary::after {
+    content: '\2013';
+  }
+  .faq__item p {
+    margin: 0 0 18px;
+    max-width: 70ch;
+  }
+
+  .cta {
+    text-align: center;
+    background:
+      radial-gradient(50% 60% at 50% 100%, rgba(255, 106, 31, 0.18), transparent 70%);
+    border-top: 1px solid var(--line);
+  }
+  .cta__inner {
+    display: grid;
+    justify-items: center;
+  }
+  .cta .hero__actions {
+    justify-content: center;
+  }
+</style>

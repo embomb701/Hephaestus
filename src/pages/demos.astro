@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import MockDispatch from '../components/MockDispatch.astro';
+import MockPipeline from '../components/MockPipeline.astro';
+import MockBooking from '../components/MockBooking.astro';
+---
+
+<Base
+  title="Sample builds"
+  description="Three sample systems — field service dispatch, online tour booking, and a recruiting pipeline — built the way Vulcan would build yours."
+>
+  <section class="section section--tight">
+    <div class="container">
+      <p class="eyebrow">Sample builds</p>
+      <h1>Three fictional businesses. Real working software.</h1>
+      <p class="lede">
+        We built these so you can see what a Vulcan system feels like without taking anyone's word for it.
+        Book a demo and we walk you through them live, then talk about what yours would look like.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container demo">
+      <div class="demo__shot"><MockDispatch /></div>
+      <div class="demo__copy">
+        <p class="eyebrow">Field service</p>
+        <h2>Ironclad HVAC</h2>
+        <p class="muted">
+          A two-truck heating and cooling company that used to run on carbon-copy tickets. The office drags
+          jobs onto a tech, the tech gets a text, the customer gets an arrival window. In the driveway the tech
+          opens the ticket, snaps photos, picks parts off a list, gets a signature and takes a card. The
+          invoice is in the customer's email before the van pulls away.
+        </p>
+        <ul class="check-list">
+          <li>Dispatch board with live status</li>
+          <li>Work tickets with photos, parts and signature</li>
+          <li>Card payment on site</li>
+          <li>Every unit's service history on the customer record</li>
+        </ul>
+        <a class="btn btn--ghost" href="/packages#field-service">Field Service package</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--alt">
+    <div class="container demo demo--flip">
+      <div class="demo__shot"><MockBooking /></div>
+      <div class="demo__copy">
+        <p class="eyebrow">Bookings &amp; tours</p>
+        <h2>Harbor &amp; Keel Charters</h2>
+        <p class="muted">
+          A boat tour operator that used to fill trips by standing on the dock with a sign. Now customers pick
+          a trip, pick a time, pay, and get a confirmation text, at 11 pm from a hotel room if they like. The
+          captain opens the day's manifest on a phone and checks people in. Nobody calls to ask if there is
+          room on the sunset sail.
+        </p>
+        <ul class="check-list">
+          <li>Live availability and seat counts</li>
+          <li>Prepayment by card at booking</li>
+          <li>Automatic confirmations and reminders</li>
+          <li>Daily manifest with check-in</li>
+        </ul>
+        <a class="btn btn--ghost" href="/packages#bookings">Bookings &amp; Tours package</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container demo">
+      <div class="demo__shot"><MockPipeline /></div>
+      <div class="demo__copy">
+        <p class="eyebrow">Recruiting &amp; staffing</p>
+        <h2>Northstar Staffing</h2>
+        <p class="muted">
+          A three-recruiter trades staffing agency that kept candidates in a spreadsheet and clients in
+          someone's head. Now every candidate, client and job order lives in one place. The pipeline shows who
+          is where, follow-ups come due automatically, and the owner can see placements and fees for the
+          month without asking anyone.
+        </p>
+        <ul class="check-list">
+          <li>Candidate database with resumes and notes</li>
+          <li>Pipeline board per job order</li>
+          <li>Follow-up reminders</li>
+          <li>Placement and fee reporting</li>
+        </ul>
+        <a class="btn btn--ghost" href="/packages#recruiting">Recruiting &amp; Staffing package</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt cta">
+    <div class="container">
+      <h2>Want to click around one yourself?</h2>
+      <p class="lede">Book a demo and we will walk you through all three, then sketch out what yours would look like.</p>
+      <a class="btn btn--primary" href="/contact">Book a free demo</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .demo {
+    display: grid;
+    gap: 28px 48px;
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .demo {
+      grid-template-columns: 1fr 1fr;
+    }
+    .demo--flip .demo__shot {
+      order: 2;
+    }
+  }
+  .demo__shot {
+    filter: drop-shadow(0 0 40px rgba(255, 106, 31, 0.14));
+  }
+  .demo__copy .check-list {
+    margin: 18px 0 24px;
+  }
+  .cta {
+    text-align: center;
+  }
+  .cta .lede {
+    margin-inline: auto;
+  }
+</style>

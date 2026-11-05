@@ -1,0 +1,94 @@
+---
+// Netlify Form. Netlify detects `data-netlify` in the built HTML and collects
+// submissions under the "demo-request" name. Notifications are configured in
+// Netlify → Forms → Notifications.
+import { packages } from '../data/packages';
+---
+
+<form
+  name="demo-request"
+  method="post"
+  action="/thanks"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="demo-form"
+>
+  <input type="hidden" name="form-name" value="demo-request" />
+  <label class="hp" aria-hidden="true">
+    Leave this empty <input type="text" name="bot-field" tabindex="-1" autocomplete="off" />
+  </label>
+
+  <div class="demo-form__row">
+    <div class="field">
+      <label for="name">Your name</label>
+      <input id="name" name="name" type="text" required autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for="business">Business name</label>
+      <input id="business" name="business" type="text" required autocomplete="organization" />
+    </div>
+  </div>
+
+  <div class="demo-form__row">
+    <div class="field">
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="tel" required autocomplete="tel" />
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" required autocomplete="email" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="package">What kind of business?</label>
+    <select id="package" name="package">
+      <option value="">Choose one</option>
+      {packages.map((p) => (
+        <option value={p.id}>
+          {p.name} — {p.audience.split(',')[0]}
+        </option>
+      ))}
+      <option value="other">Something else</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="message">What's slowing you down today?</label>
+    <textarea
+      id="message"
+      name="message"
+      rows="5"
+      placeholder="Paper tickets, missed bookings, a spreadsheet nobody updates…"
+    ></textarea>
+  </div>
+
+  <button type="submit" class="btn btn--primary btn--block">Request my free demo</button>
+  <p class="faint demo-form__fine">No sales calls at dinner time. We reply within one business day.</p>
+</form>
+
+<script>
+  // Pre-select the package when linked as /contact?package=field-service
+  const id = new URLSearchParams(location.search).get('package');
+  const select = document.getElementById('package') as HTMLSelectElement | null;
+  if (id && select && [...select.options].some((o) => o.value === id)) {
+    select.value = id;
+  }
+</script>
+
+<style>
+  .demo-form__row {
+    display: grid;
+    gap: 0 16px;
+  }
+  @media (min-width: 560px) {
+    .demo-form__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .demo-form__fine {
+    margin: 12px 0 0;
+    font-size: 0.88rem;
+    text-align: center;
+  }
+</style>

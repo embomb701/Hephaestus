@@ -1,0 +1,147 @@
+---
+import Base from '../layouts/Base.astro';
+import PackageCard from '../components/PackageCard.astro';
+import { packages, addOns, formatUsd, DEPOSIT_USD } from '../data/packages';
+---
+
+<Base
+  title="Packages & pricing"
+  description="Starter packages for field service, recruiting and bookings. Starting-at prices, one-time payment, no subscriptions. Reserve a build slot with a deposit."
+>
+  <section class="section section--tight">
+    <div class="container">
+      <p class="eyebrow">Packages &amp; pricing</p>
+      <h1>One price. Paid once.</h1>
+      <p class="lede">
+        Every package below is a starting point. After a free demo you get a written scope and a fixed price
+        for your build. A {formatUsd(DEPOSIT_USD)} deposit reserves your slot and comes off that price.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="grid grid--3 pkgs">
+        {packages.map((p) => (
+          <PackageCard pkg={p} full featured={p.id === 'field-service'} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="add-ons">
+    <div class="container">
+      <p class="eyebrow">Add-ons</p>
+      <h2>Build out from the base.</h2>
+      <p class="lede">
+        Add any of these to any package, now or later. Prices are starting points and get fixed in your
+        written scope.
+      </p>
+      <div class="grid grid--3 addons">
+        {addOns.map((a) => (
+          <div class="card addon">
+            <h3>{a.name}</h3>
+            <p class="muted">{a.description}</p>
+            <p class="addon__price">
+              {a.startingAt === null ? 'Quoted per project' : `From ${formatUsd(a.startingAt)}`}
+              {a.needsStorage && <span class="addon__note">Needs online storage in your account</span>}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div class="storage card">
+        <h3>About online storage</h3>
+        <p class="muted">
+          Features that keep photos, documents or equipment history online need a database and file storage
+          that runs every month. We set that up in an account in <em>your</em> name, so you pay the provider
+          directly, usually $0 to $25 a month for a small business, and you never pay Vulcan a subscription.
+          If you stop working with us, nothing changes. It is still yours.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container two">
+      <div>
+        <p class="eyebrow">After the build</p>
+        <h2>Support is optional. Ownership is not.</h2>
+      </div>
+      <div class="muted">
+        <p>
+          When we hand over your system, it is finished and it is yours. From there you have three choices,
+          and none of them is required:
+        </p>
+        <ul class="check-list">
+          <li>Run it yourself. Most clients do.</li>
+          <li>Pay for changes as you need them, one at a time.</li>
+          <li>Pick an optional support plan if you want us on call for fixes and questions.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt cta">
+    <div class="container">
+      <h2>Not sure which package fits?</h2>
+      <p class="lede">That is what the demo is for. Twenty minutes, no pressure, and you leave knowing what you need.</p>
+      <a class="btn btn--primary" href="/contact">Book a free demo</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pkgs {
+    align-items: stretch;
+  }
+  .addons {
+    margin-top: 28px;
+  }
+  .addon {
+    display: flex;
+    flex-direction: column;
+  }
+  .addon p {
+    margin: 0;
+  }
+  .addon h3 {
+    font-size: 1.1rem;
+  }
+  .addon__price {
+    margin-top: auto !important;
+    padding-top: 14px;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .addon__note {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: var(--faint);
+  }
+  .storage {
+    margin-top: 28px;
+    border-color: rgba(233, 169, 75, 0.35);
+  }
+  .storage p {
+    margin: 0;
+    max-width: 80ch;
+  }
+  .two {
+    display: grid;
+    gap: 24px 48px;
+  }
+  @media (min-width: 900px) {
+    .two {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .cta {
+    text-align: center;
+  }
+  .cta .lede {
+    margin-inline: auto;
+  }
+</style>

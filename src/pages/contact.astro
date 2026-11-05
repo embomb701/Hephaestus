@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import DemoRequestForm from '../components/DemoRequestForm.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Book a free demo"
+  description="Call, email or send a note. We'll show you working sample builds and talk through what your business needs. Free, twenty minutes, no pressure."
+>
+  <section class="section">
+    <div class="container contact">
+      <div class="contact__side">
+        <p class="eyebrow">Free demo</p>
+        <h1>Let's talk about how you work.</h1>
+        <p class="lede">
+          Twenty minutes. We show you working sample builds, you tell us where the clipboard is slowing you
+          down, and you leave knowing what you would need and what it would cost.
+        </p>
+
+        <div class="contact__direct">
+          <a class="contact__line" href={site.phoneHref}>
+            <span class="contact__label">Call</span>
+            <span class="contact__value">{site.phone}</span>
+          </a>
+          <a class="contact__line" href={`mailto:${site.email}?subject=Free%20demo`}>
+            <span class="contact__label">Email</span>
+            <span class="contact__value">{site.email}</span>
+          </a>
+        </div>
+
+        <h3 class="contact__h">What happens next</h3>
+        <ol class="contact__steps muted">
+          <li>We reply within one business day to set a time.</li>
+          <li>On the call we walk through the sample builds and your business.</li>
+          <li>You get a written scope and a fixed one-time price. No obligation.</li>
+        </ol>
+      </div>
+
+      <div class="card contact__form">
+        <DemoRequestForm />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact {
+    display: grid;
+    gap: 36px;
+  }
+  @media (min-width: 960px) {
+    .contact {
+      grid-template-columns: 1fr 1.05fr;
+      gap: 64px;
+      align-items: start;
+    }
+  }
+  .contact__direct {
+    display: grid;
+    gap: 10px;
+    margin: 24px 0 32px;
+  }
+  .contact__line {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 14px 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--text);
+  }
+  .contact__line:hover {
+    border-color: var(--gold);
+    color: var(--text);
+  }
+  .contact__label {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ember);
+    min-width: 54px;
+  }
+  .contact__value {
+    font-weight: 600;
+    font-size: 1.1rem;
+  }
+  .contact__h {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  .contact__steps {
+    padding-left: 20px;
+    margin: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .contact__form {
+    padding: 28px;
+  }
+</style>

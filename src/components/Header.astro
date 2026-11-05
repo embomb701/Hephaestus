@@ -1,0 +1,153 @@
+---
+import Logo from './Logo.astro';
+import { site } from '../data/site';
+
+const nav = [
+  { href: '/packages', label: 'Packages' },
+  { href: '/demos', label: 'Demos' },
+  { href: '/#how', label: 'How it works' },
+  { href: '/contact', label: 'Contact' },
+];
+const path = Astro.url.pathname;
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="/" class="header__brand"><Logo /></a>
+
+    <nav class="header__nav" aria-label="Main">
+      {nav.map((n) => (
+        <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>
+          {n.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="header__cta">
+      <a class="header__phone" href={site.phoneHref}>{site.phone}</a>
+      <a class="btn btn--primary header__btn" href="/contact">Book a free demo</a>
+    </div>
+
+    <details class="header__menu">
+      <summary aria-label="Menu">
+        <span></span><span></span><span></span>
+      </summary>
+      <div class="header__sheet">
+        {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+        <a href={site.phoneHref}>Call {site.phone}</a>
+        <a class="btn btn--primary" href="/contact">Book a free demo</a>
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13, 10, 8, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .header__inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 68px;
+  }
+  .header__brand {
+    text-decoration: none;
+    margin-right: auto;
+  }
+  .header__nav {
+    display: none;
+    gap: 26px;
+  }
+  .header__nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.97rem;
+  }
+  .header__nav a:hover,
+  .header__nav a[aria-current='page'] {
+    color: var(--text);
+  }
+  .header__cta {
+    display: none;
+    align-items: center;
+    gap: 18px;
+  }
+  .header__phone {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .header__btn {
+    padding: 10px 18px;
+    font-size: 0.95rem;
+  }
+
+  /* Mobile menu */
+  .header__menu {
+    position: relative;
+  }
+  .header__menu summary {
+    list-style: none;
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-content: center;
+    gap: 5px;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+  }
+  .header__menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .header__menu summary span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: var(--text);
+  }
+  .header__sheet {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    width: min(88vw, 320px);
+    display: grid;
+    gap: 6px;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    box-shadow: 0 24px 50px -20px rgba(0, 0, 0, 0.8);
+  }
+  .header__sheet a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+  }
+  .header__sheet a:not(.btn):hover {
+    background: var(--surface-2);
+  }
+  .header__sheet .btn {
+    margin-top: 6px;
+  }
+
+  @media (min-width: 900px) {
+    .header__nav,
+    .header__cta {
+      display: flex;
+    }
+    .header__menu {
+      display: none;
+    }
+  }
+</style>

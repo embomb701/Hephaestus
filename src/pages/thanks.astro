@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base title="Got it" description="Your demo request is in. We reply within one business day.">
+  <section class="section status">
+    <div class="container status__inner">
+      <p class="eyebrow">Request received</p>
+      <h1>Thanks. We'll be in touch within one business day.</h1>
+      <p class="lede">
+        If it's urgent, call <a href={site.phoneHref}>{site.phone}</a>. Otherwise, have a look at the sample
+        builds while you wait.
+      </p>
+      <div class="status__actions">
+        <a class="btn btn--primary" href="/demos">See the sample builds</a>
+        <a class="btn btn--ghost" href="/">Back home</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .status {
+    min-height: 60vh;
+    display: grid;
+    align-items: center;
+  }
+  .status__inner {
+    max-width: 720px;
+  }
+  .status__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+</style>

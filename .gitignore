@@ -1,0 +1,21 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# environment — never commit Stripe keys
+.env
+.env.*
+!.env.example
+
+# netlify
+.netlify/
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log

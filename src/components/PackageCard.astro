@@ -1,0 +1,123 @@
+---
+import ReserveButton from './ReserveButton.astro';
+import { formatUsd, type Package } from '../data/packages';
+
+interface Props {
+  pkg: Package;
+  /** Full card shows the whole include list and the reserve button. */
+  full?: boolean;
+  featured?: boolean;
+}
+const { pkg, full = false, featured = false } = Astro.props;
+const includes = full ? pkg.includes : pkg.includes.slice(0, 4);
+---
+
+<article class:list={['card', 'pkg', { 'pkg--featured': featured }]} id={pkg.id}>
+  {featured && <span class="pkg__flag">Most requested</span>}
+  <h3 class="pkg__name">{pkg.name}</h3>
+  <p class="pkg__audience">{pkg.audience}</p>
+
+  <p class="pkg__price">
+    <span class="pkg__from">Starting at</span>
+    <span class="pkg__amount">{formatUsd(pkg.startingAt)}</span>
+    <span class="pkg__once">one time</span>
+  </p>
+
+  <p class="pkg__summary">{pkg.summary}</p>
+
+  <ul class="check-list pkg__list">
+    {includes.map((item) => <li>{item}</li>)}
+    {!full && pkg.includes.length > 4 && (
+      <li class="pkg__more">
+        <a href={`/packages#${pkg.id}`}>+ {pkg.includes.length - 4} more</a>
+      </li>
+    )}
+  </ul>
+
+  <div class="pkg__actions">
+    {full ? (
+      <>
+        <ReserveButton pkg={pkg} block />
+        <a class="btn btn--ghost btn--block" href={`/contact?package=${pkg.id}`}>Ask about this build</a>
+      </>
+    ) : (
+      <a class="btn btn--ghost btn--block" href={`/packages#${pkg.id}`}>See the full build</a>
+    )}
+  </div>
+</article>
+
+<style>
+  .pkg {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px;
+  }
+  .pkg--featured {
+    border-color: rgba(255, 106, 31, 0.55);
+    box-shadow: 0 0 0 1px rgba(255, 106, 31, 0.25), 0 30px 60px -40px rgba(255, 106, 31, 0.6);
+  }
+  .pkg__flag {
+    position: absolute;
+    top: -12px;
+    left: 24px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--ember);
+    color: #1a0d05;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .pkg__name {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+  .pkg__audience {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin: 0;
+  }
+  .pkg__price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .pkg__from,
+  .pkg__once {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .pkg__amount {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .pkg__summary {
+    margin: 0 0 14px;
+  }
+  .pkg__list {
+    margin-bottom: 22px;
+  }
+  .pkg__more {
+    padding-left: 26px;
+  }
+  .pkg__more::before {
+    display: none;
+  }
+  .pkg__actions {
+    margin-top: auto;
+    display: grid;
+    gap: 10px;
+  }
+</style>

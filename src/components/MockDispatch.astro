@@ -1,0 +1,135 @@
+---
+import MockWindow from './MockWindow.astro';
+
+const jobs = [
+  { time: '8:00', who: 'Rodriguez', what: 'AC not cooling', tech: 'Mike', status: 'done' },
+  { time: '9:30', who: 'Harbor View Apts', what: 'Rooftop unit PM', tech: 'Mike', status: 'onsite' },
+  { time: '10:00', who: 'Tanaka', what: 'Thermostat swap', tech: 'Dee', status: 'enroute' },
+  { time: '1:00', who: 'Patel', what: 'Furnace tune-up', tech: 'Dee', status: 'scheduled' },
+  { time: '2:30', who: 'Oakridge Dental', what: 'Compressor noise', tech: 'Mike', status: 'scheduled' },
+];
+const labels: Record<string, string> = {
+  done: 'Done',
+  onsite: 'On site',
+  enroute: 'En route',
+  scheduled: 'Scheduled',
+};
+---
+
+<MockWindow title="Dispatch — Tuesday">
+  <div class="dsp">
+    <div class="dsp__side">
+      <div class="dsp__tech"><i style="background:#ff6a1f"></i> Mike</div>
+      <div class="dsp__tech"><i style="background:#e9a94b"></i> Dee</div>
+      <div class="dsp__tech dsp__tech--off"><i></i> Carlos (off)</div>
+      <div class="dsp__kpi"><b>5</b> jobs today</div>
+      <div class="dsp__kpi"><b>$2,340</b> invoiced</div>
+    </div>
+    <div class="dsp__list">
+      {jobs.map((j) => (
+        <div class="dsp__job" data-status={j.status}>
+          <span class="dsp__time">{j.time}</span>
+          <span class="dsp__who">
+            {j.who} <small>{j.what}</small>
+          </span>
+          <span class="dsp__tech-tag">{j.tech}</span>
+          <span class="dsp__status">{labels[j.status]}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</MockWindow>
+
+<style>
+  .dsp {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 10px;
+  }
+  .dsp__side {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding-right: 10px;
+    border-right: 1px solid var(--line);
+  }
+  .dsp__tech {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+  .dsp__tech i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3a2f27;
+  }
+  .dsp__tech--off {
+    color: var(--faint);
+    font-weight: 400;
+  }
+  .dsp__kpi {
+    margin-top: 6px;
+    color: var(--muted);
+  }
+  .dsp__kpi b {
+    display: block;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .dsp__list {
+    display: grid;
+    gap: 5px;
+  }
+  .dsp__job {
+    display: grid;
+    grid-template-columns: 34px 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #1a1410;
+    border: 1px solid var(--line);
+    border-left: 3px solid #3a2f27;
+    border-radius: 6px;
+  }
+  .dsp__job[data-status='done'] {
+    border-left-color: var(--ok);
+    opacity: 0.7;
+  }
+  .dsp__job[data-status='onsite'] {
+    border-left-color: var(--ember);
+  }
+  .dsp__job[data-status='enroute'] {
+    border-left-color: var(--gold);
+  }
+  .dsp__time {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .dsp__who {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dsp__who small {
+    display: block;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .dsp__tech-tag {
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #261e17;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .dsp__status {
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 54px;
+    text-align: right;
+  }
+</style>

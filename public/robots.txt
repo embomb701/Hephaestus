@@ -1,0 +1,5 @@
+# Site is not public yet. Flip this to "Allow: /" at launch and add the sitemap line.
+User-agent: *
+Disallow: /
+
+# Sitemap: https://vulcan.example/sitemap-index.xml

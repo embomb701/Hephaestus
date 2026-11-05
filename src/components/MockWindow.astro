@@ -1,0 +1,55 @@
+---
+// Fake app window chrome used by the demo mock-ups. Purely decorative.
+interface Props {
+  title: string;
+  label?: string;
+}
+const { title, label } = Astro.props;
+---
+
+<div class="mock" role="img" aria-label={label ?? `Sample screen: ${title}`}>
+  <div class="mock__bar">
+    <span class="mock__dot"></span><span class="mock__dot"></span><span class="mock__dot"></span>
+    <span class="mock__title">{title}</span>
+  </div>
+  <div class="mock__body">
+    <slot />
+  </div>
+</div>
+
+<style>
+  .mock {
+    background: #120e0b;
+    border: 1px solid var(--line-strong);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 106, 31, 0.08);
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--text);
+    user-select: none;
+  }
+  .mock__bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 12px;
+    background: #1a1410;
+    border-bottom: 1px solid var(--line);
+  }
+  .mock__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #3a2f27;
+  }
+  .mock__title {
+    margin-left: 8px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .mock__body {
+    padding: 12px;
+  }
+</style>

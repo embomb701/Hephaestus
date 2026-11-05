@@ -1,0 +1,58 @@
+---
+// Anvil-and-flame mark plus wordmark. `size` is the mark height in px.
+interface Props {
+  size?: number;
+  wordmark?: boolean;
+}
+const { size = 28, wordmark = true } = Astro.props;
+---
+
+<span class="logo" aria-label="Vulcan">
+  <svg
+    class="logo__mark"
+    width={size}
+    height={size}
+    viewBox="0 0 64 64"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="flame" x1="32" y1="4" x2="32" y2="34" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffd27a"></stop>
+        <stop offset="0.55" stop-color="#ff8f55"></stop>
+        <stop offset="1" stop-color="#ff6a1f"></stop>
+      </linearGradient>
+    </defs>
+    <!-- flame -->
+    <path
+      d="M32 4c2 7 9 10 9 19 0 4-2 7-4 9 1-5-2-8-5-11-2 4-6 6-6 11 0 2 1 4 2 5-5-2-9-6-9-12C19 14 30 12 32 4z"
+      fill="url(#flame)"
+    ></path>
+    <!-- anvil -->
+    <path
+      d="M10 37h44v6H44l-2 7h4v6H18v-6h4l-2-7H10z"
+      fill="#e9a94b"
+    ></path>
+    <path d="M10 37h44v6H10z" fill="#f3e9dc" opacity="0.9"></path>
+  </svg>
+  {wordmark && <span class="logo__word">Vulcan</span>}
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .logo__word {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+</style>

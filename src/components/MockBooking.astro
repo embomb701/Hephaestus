@@ -1,0 +1,126 @@
+---
+import MockWindow from './MockWindow.astro';
+
+const days = [
+  { d: 'Thu', n: 12 },
+  { d: 'Fri', n: 13 },
+  { d: 'Sat', n: 14, active: true },
+  { d: 'Sun', n: 15 },
+  { d: 'Mon', n: 16 },
+];
+const slots = [
+  { t: '9:00 AM', name: 'Morning Reef Snorkel', seats: '2 of 10 left', price: '$85' },
+  { t: '1:00 PM', name: 'Harbor Cruise', seats: '6 of 12 left', price: '$45' },
+  { t: '6:30 PM', name: 'Sunset Sail', seats: 'Sold out', price: '$65', full: true },
+];
+---
+
+<MockWindow title="Book online — Harbor & Keel Charters">
+  <div class="bk__days">
+    {days.map((d) => (
+      <div class:list={['bk__day', { 'bk__day--active': d.active }]}>
+        <span>{d.d}</span>
+        <b>{d.n}</b>
+      </div>
+    ))}
+  </div>
+  <div class="bk__slots">
+    {slots.map((s) => (
+      <div class:list={['bk__slot', { 'bk__slot--full': s.full }]}>
+        <span class="bk__time">{s.t}</span>
+        <span class="bk__name">
+          {s.name} <small>{s.seats}</small>
+        </span>
+        <span class="bk__price">{s.price}</span>
+        <span class="bk__btn">{s.full ? 'Waitlist' : 'Book'}</span>
+      </div>
+    ))}
+  </div>
+  <div class="bk__foot">Pay now by card · Confirmation texted instantly · Free cancellation 24h</div>
+</MockWindow>
+
+<style>
+  .bk__days {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .bk__day {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 6px 0;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    color: var(--muted);
+  }
+  .bk__day b {
+    color: var(--text);
+    font-size: 14px;
+  }
+  .bk__day--active {
+    background: rgba(255, 106, 31, 0.14);
+    border-color: var(--ember);
+    color: var(--ember-soft);
+  }
+  .bk__slots {
+    display: grid;
+    gap: 5px;
+  }
+  .bk__slot {
+    display: grid;
+    grid-template-columns: 54px 1fr auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 8px;
+    background: #1a1410;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .bk__slot--full {
+    opacity: 0.6;
+  }
+  .bk__time {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+  }
+  .bk__name {
+    font-weight: 600;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bk__name small {
+    display: block;
+    font-weight: 400;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .bk__price {
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .bk__btn {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--ember);
+    color: #1a0d05;
+    font-weight: 700;
+    font-size: 11px;
+  }
+  .bk__slot--full .bk__btn {
+    background: #3a2f27;
+    color: var(--muted);
+  }
+  .bk__foot {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    color: var(--faint);
+    font-size: 11px;
+    text-align: center;
+  }
+</style>

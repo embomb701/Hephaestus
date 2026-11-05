@@ -1,0 +1,44 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+
+<Base title="No charge made" description="Checkout was cancelled. Nothing was charged.">
+  <section class="section status">
+    <div class="container status__inner">
+      <p class="eyebrow">Checkout cancelled</p>
+      <h1>No charge was made.</h1>
+      <p class="lede">
+        Not ready to reserve a slot yet? That's fine. A free demo is the better first step anyway, and there's
+        no deposit for that.
+      </p>
+      <div class="status__actions">
+        <a class="btn btn--primary" href="/contact">Book a free demo</a>
+        <a class="btn btn--ghost" href="/packages">Back to packages</a>
+      </div>
+      <p class="muted status__fine">
+        Or just call <a href={site.phoneHref}>{site.phone}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .status {
+    min-height: 60vh;
+    display: grid;
+    align-items: center;
+  }
+  .status__inner {
+    max-width: 720px;
+  }
+  .status__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .status__fine {
+    margin-top: 20px;
+  }
+</style>

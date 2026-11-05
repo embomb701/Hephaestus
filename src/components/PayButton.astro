@@ -1,0 +1,37 @@
+---
+// Posts to the Stripe checkout function. Plain HTML form so it works without JS.
+import { formatUsd, getPayment, type PaymentId } from '../data/packages';
+
+interface Props {
+  payment: PaymentId;
+  /** Optional package id, passed along as context for the Stripe record. */
+  packageId?: string;
+  label?: string;
+  block?: boolean;
+  ghost?: boolean;
+}
+const { payment: paymentId, packageId, label, block = false, ghost = false } = Astro.props;
+const payment = getPayment(paymentId);
+if (!payment) throw new Error(`Unknown payment id: ${paymentId}`);
+---
+
+<form method="post" action="/api/pay" class="pay">
+  <input type="hidden" name="payment" value={payment.id} />
+  {packageId && <input type="hidden" name="package" value={packageId} />}
+  <label class="hp" aria-hidden="true">
+    Company site <input type="text" name="company_site" tabindex="-1" autocomplete="off" />
+  </label>
+  <slot />
+  <button
+    type="submit"
+    class:list={['btn', ghost ? 'btn--ghost' : 'btn--primary', { 'btn--block': block }]}
+  >
+    {label ?? `${payment.name} — ${formatUsd(payment.amount)}`}
+  </button>
+</form>
+
+<style>
+  .pay {
+    margin: 0;
+  }
+</style>

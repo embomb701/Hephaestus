@@ -3,22 +3,35 @@ import Base from '../../layouts/Base.astro';
 import { site } from '../../data/site';
 ---
 
-<Base title="Slot reserved" description="Your build slot is reserved. Here's what happens next.">
+<Base title="Payment received" description="Your payment went through. Here's what happens next.">
   <section class="section status">
     <div class="container status__inner">
-      <p class="eyebrow">Deposit received</p>
-      <h1>Your build slot is reserved.</h1>
-      <p class="lede">
-        Stripe has emailed you a receipt. Your deposit comes straight off your final one-time price.
-      </p>
-      <h3>What happens next</h3>
-      <ol class="muted status__steps">
-        <li>We email you within one business day to schedule a scoping call.</li>
-        <li>On that call we map out exactly what your system needs to do.</li>
-        <li>You get a written scope with a fixed price and a timeline. Work starts when you approve it.</li>
-      </ol>
+      <p class="eyebrow">Payment received</p>
+
+      <div data-paid="reserve" class="status__variant">
+        <h1>Your build slot is reserved.</h1>
+        <p class="lede">Stripe has emailed you a receipt. This amount comes straight off your final one-time price.</p>
+        <h3>What happens next</h3>
+        <ol class="muted status__steps">
+          <li>We email you within one business day to schedule a scoping call.</li>
+          <li>On that call we map out exactly what your system needs to do.</li>
+          <li>You get a written scope with a fixed price and timeline. Work starts with the kickoff payment once you approve it.</li>
+        </ol>
+      </div>
+
+      <div data-paid="kickoff" class="status__variant" hidden>
+        <h1>The forge is lit.</h1>
+        <p class="lede">Stripe has emailed you a receipt. Your build is now in progress.</p>
+        <h3>What happens next</h3>
+        <ol class="muted status__steps">
+          <li>We confirm your start date by email within one business day.</li>
+          <li>You get check-ins as the build comes together, so nothing surprises you.</li>
+          <li>At handover we train your team, and the balance is invoiced through Stripe exactly as scoped.</li>
+        </ol>
+      </div>
+
       <p class="muted">
-        Questions in the meantime? Call <a href={site.phoneHref}>{site.phone}</a> or email
+        Questions in the meantime? Call <a href={site.phoneHref}>{site.phone}</a> or email{' '}
         <a href={`mailto:${site.email}`}>{site.email}</a>.
       </p>
       <div class="status__actions">
@@ -26,6 +39,15 @@ import { site } from '../../data/site';
       </div>
     </div>
   </section>
+
+  <script>
+    // Show the copy that matches which payment was just made (?paid=reserve|kickoff).
+    const paid = new URLSearchParams(location.search).get('paid');
+    const target = document.querySelector<HTMLElement>(`[data-paid="${paid}"]`);
+    if (paid && target) {
+      document.querySelectorAll<HTMLElement>('.status__variant').forEach((el) => (el.hidden = el !== target));
+    }
+  </script>
 </Base>
 
 <style>

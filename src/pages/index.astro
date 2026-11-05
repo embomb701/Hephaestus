@@ -4,7 +4,7 @@ import PackageCard from '../components/PackageCard.astro';
 import MockDispatch from '../components/MockDispatch.astro';
 import MockPipeline from '../components/MockPipeline.astro';
 import MockBooking from '../components/MockBooking.astro';
-import { packages, formatUsd, DEPOSIT_USD } from '../data/packages';
+import { packages, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/packages';
 import { industries } from '../data/industries';
 import { site } from '../data/site';
 
@@ -30,12 +30,12 @@ const steps = [
   {
     n: '02',
     title: 'Reserve your slot',
-    text: `A ${formatUsd(DEPOSIT_USD)} deposit holds your place in the build queue. It comes straight off your final price.`,
+    text: `${formatUsd(RESERVE_USD)} holds your place in the build queue while we write up your scope. It comes straight off your final price.`,
   },
   {
     n: '03',
     title: 'We forge it around you',
-    text: 'You get a written scope and a fixed one-time price. Then we build, with check-ins so nothing surprises you.',
+    text: `You approve a written scope and a fixed one-time price. A ${formatUsd(KICKOFF_USD)} kickoff starts the build; the balance is invoiced through Stripe at handover.`,
   },
   {
     n: '04',
@@ -62,8 +62,12 @@ const faqs = [
     a: 'Most starter packages take three to six weeks from deposit to handover, depending on scope. You will know the timeline before any work starts.',
   },
   {
-    q: 'Is the deposit refundable?',
-    a: 'If we decide together before work starts that this is not the right fit, the deposit is refunded in full.',
+    q: 'How do I pay?',
+    a: `By card through Stripe. ${formatUsd(RESERVE_USD)} reserves your slot, ${formatUsd(KICKOFF_USD)} kicks off the build once you approve the scope, and the balance is sent as a Stripe invoice for exactly the amount we agreed in writing. No lump sum up front.`,
+  },
+  {
+    q: 'Is the reservation refundable?',
+    a: 'If we decide together before scoping that this is not the right fit, it is refunded in full.',
   },
   {
     q: 'My business is not on your list. Can you still build for me?',

@@ -1,6 +1,6 @@
 ---
-import ReserveButton from './ReserveButton.astro';
-import { formatUsd, type Package } from '../data/packages';
+import PayButton from './PayButton.astro';
+import { RESERVE_USD, formatUsd, type Package } from '../data/packages';
 
 interface Props {
   pkg: Package;
@@ -37,7 +37,7 @@ const includes = full ? pkg.includes : pkg.includes.slice(0, 4);
   <div class="pkg__actions">
     {full ? (
       <>
-        <ReserveButton pkg={pkg} block />
+        <PayButton payment="reserve" packageId={pkg.id} label={`Reserve a slot — ${formatUsd(RESERVE_USD)}`} block />
         <a class="btn btn--ghost btn--block" href={`/contact?package=${pkg.id}`}>Ask about this build</a>
       </>
     ) : (

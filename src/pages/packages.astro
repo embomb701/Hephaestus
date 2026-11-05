@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PackageCard from '../components/PackageCard.astro';
-import { packages, addOns, formatUsd, DEPOSIT_USD } from '../data/packages';
+import { packages, addOns, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/packages';
 ---
 
 <Base
@@ -14,7 +14,8 @@ import { packages, addOns, formatUsd, DEPOSIT_USD } from '../data/packages';
       <h1>One price. Paid once.</h1>
       <p class="lede">
         Every package below is a starting point. After a free demo you get a written scope and a fixed price
-        for your build. A {formatUsd(DEPOSIT_USD)} deposit reserves your slot and comes off that price.
+        for your build. {formatUsd(RESERVE_USD)} reserves your slot, {formatUsd(KICKOFF_USD)} kicks off the
+        build, and the balance is invoiced through Stripe. <a href="/pay">How payment works &rarr;</a>
       </p>
     </div>
   </section>

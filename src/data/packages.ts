@@ -15,14 +15,49 @@ export interface Package {
   summary: string;
   /** "Starting at" price in whole US dollars. */
   startingAt: number;
-  /** Deposit that reserves a build slot, in whole US dollars. */
-  deposit: number;
   includes: string[];
   /** Industries that typically pick this package. */
   goodFor: string[];
 }
 
-export const DEPOSIT_USD = 500;
+// The two fixed payments the website itself can take. Everything beyond these
+// is invoiced through Stripe for the agreed amount.
+export type PaymentId = 'reserve' | 'kickoff';
+
+export interface SitePayment {
+  id: PaymentId;
+  name: string;
+  /** Whole US dollars. */
+  amount: number;
+  /** When in the process this is paid. */
+  when: string;
+  description: string;
+}
+
+export const sitePayments: SitePayment[] = [
+  {
+    id: 'reserve',
+    name: 'Reserve a build slot',
+    amount: 50,
+    when: 'After your free demo',
+    description:
+      'Holds your place in the build queue while we write up your scope. Refunded in full if we agree before scoping that it is not a fit.',
+  },
+  {
+    id: 'kickoff',
+    name: 'Kickoff payment',
+    amount: 450,
+    when: 'When you approve the written scope',
+    description: 'Starts the build. Applied to your final one-time price, like the reservation.',
+  },
+];
+
+export const RESERVE_USD = sitePayments[0].amount;
+export const KICKOFF_USD = sitePayments[1].amount;
+
+export function getPayment(id: string): SitePayment | undefined {
+  return sitePayments.find((p) => p.id === id);
+}
 
 export const packages: Package[] = [
   {
@@ -32,7 +67,6 @@ export const packages: Package[] = [
     summary:
       'Replace the clipboard. Customers, jobs, scheduling and digital work tickets your techs fill out from their phone in a few taps.',
     startingAt: 4500,
-    deposit: DEPOSIT_USD,
     includes: [
       'Customer records with full job history',
       'Drag-and-drop schedule and dispatch board',
@@ -51,7 +85,6 @@ export const packages: Package[] = [
     summary:
       'Every candidate, client and job order in one place, with a pipeline that tells you who to call next instead of a spreadsheet that tells you nothing.',
     startingAt: 3500,
-    deposit: DEPOSIT_USD,
     includes: [
       'Candidate database with resumes, notes and tags',
       'Client and job-order tracking',
@@ -70,7 +103,6 @@ export const packages: Package[] = [
     summary:
       'Customers book and pay in advance from their phone, day or night. You stop standing on the dock hoping someone walks up.',
     startingAt: 2500,
-    deposit: DEPOSIT_USD,
     includes: [
       'Online booking calendar with real-time availability',
       'Prepayment or deposits by card at booking',

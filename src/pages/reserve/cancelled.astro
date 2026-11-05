@@ -9,12 +9,12 @@ import { site } from '../../data/site';
       <p class="eyebrow">Checkout cancelled</p>
       <h1>No charge was made.</h1>
       <p class="lede">
-        Not ready to reserve a slot yet? That's fine. A free demo is the better first step anyway, and there's
-        no deposit for that.
+        Changed your mind, or something went wrong at checkout? Either way, nothing was charged. If you'd
+        rather pay another way, we can send a Stripe invoice instead.
       </p>
       <div class="status__actions">
-        <a class="btn btn--primary" href="/contact">Book a free demo</a>
-        <a class="btn btn--ghost" href="/packages">Back to packages</a>
+        <a class="btn btn--primary" href="/pay">Try again</a>
+        <a class="btn btn--ghost" href="/contact">Book a free demo</a>
       </div>
       <p class="muted status__fine">
         Or just call <a href={site.phoneHref}>{site.phone}</a>.

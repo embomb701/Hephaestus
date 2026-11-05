@@ -1,0 +1,155 @@
+---
+import Base from '../layouts/Base.astro';
+import PayButton from '../components/PayButton.astro';
+import { packages, sitePayments, formatUsd } from '../data/packages';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Make a payment"
+  description="Reserve a build slot or make your kickoff payment by card through Stripe. Everything beyond that is invoiced for the agreed amount."
+>
+  <section class="section section--tight">
+    <div class="container">
+      <p class="eyebrow">Payments</p>
+      <h1>Pay by card, through Stripe.</h1>
+      <p class="lede">
+        Two payments happen through this site. Everything else, including the balance of your build, is
+        invoiced through Stripe for the exact amount we agreed in writing, so there is never a surprise charge.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container grid grid--2 pays">
+      {sitePayments.map((p, i) => (
+        <article class="card pay-card">
+          <span class="pay-card__step">Step {i + 1}</span>
+          <h2 class="pay-card__name">{p.name}</h2>
+          <p class="pay-card__amount">{formatUsd(p.amount)}</p>
+          <p class="pay-card__when">{p.when}</p>
+          <p class="muted">{p.description}</p>
+          <PayButton payment={p.id} block>
+            <div class="field">
+              <label for={`business-${p.id}`}>Business name</label>
+              <input id={`business-${p.id}`} name="business" type="text" autocomplete="organization" required />
+            </div>
+            <div class="field">
+              <label for={`package-${p.id}`}>Package</label>
+              <select id={`package-${p.id}`} name="package">
+                <option value="">Not sure yet</option>
+                {packages.map((pkg) => (
+                  <option value={pkg.id}>{pkg.name}</option>
+                ))}
+              </select>
+            </div>
+          </PayButton>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container how">
+      <div>
+        <p class="eyebrow">How payment works</p>
+        <h2>Small steps in. No lump sum up front.</h2>
+      </div>
+      <ol class="how__list">
+        <li>
+          <b>Free demo.</b> No payment. We look at how your business runs and what you need.
+        </li>
+        <li>
+          <b>Reserve — {formatUsd(sitePayments[0].amount)}.</b> Holds your slot while we write the scope. Paid
+          here by card.
+        </li>
+        <li>
+          <b>Kickoff — {formatUsd(sitePayments[1].amount)}.</b> You approve the written scope and fixed price;
+          this starts the build. Paid here by card.
+        </li>
+        <li>
+          <b>Balance — invoiced.</b> The rest of your one-time price, exactly as scoped, sent as a Stripe
+          invoice you can pay by card or bank transfer. Add-ons and later changes are invoiced the same way.
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="container">
+      <h2>Have a question about a payment?</h2>
+      <p class="lede">
+        Call <a href={site.phoneHref}>{site.phone}</a> or email{' '}
+        <a href={`mailto:${site.email}`}>{site.email}</a>. Receipts come from Stripe automatically.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pays {
+    align-items: stretch;
+  }
+  .pay-card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 28px;
+  }
+  .pay-card__step {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ember);
+  }
+  .pay-card__name {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+  .pay-card__amount {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin: 8px 0 4px;
+  }
+  .pay-card__when {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin: 0 0 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+  .pay-card :global(form) {
+    margin-top: auto;
+    padding-top: 10px;
+  }
+  .how {
+    display: grid;
+    gap: 24px 48px;
+  }
+  @media (min-width: 900px) {
+    .how {
+      grid-template-columns: 1fr 1.2fr;
+      align-items: start;
+    }
+  }
+  .how__list {
+    margin: 0;
+    padding-left: 22px;
+    display: grid;
+    gap: 14px;
+    color: var(--muted);
+  }
+  .how__list b {
+    color: var(--text);
+  }
+  .cta {
+    text-align: center;
+  }
+  .cta .lede {
+    margin-inline: auto;
+  }
+</style>

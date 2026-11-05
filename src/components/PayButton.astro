@@ -1,22 +1,24 @@
 ---
 // Posts to the Stripe checkout function. Plain HTML form so it works without JS.
-import { formatUsd, getPayment, type PaymentId } from '../data/packages';
+// `payment` is any id from `checkoutItems` (one-time, monthly or yearly).
+import { formatUsd, getCheckoutItem } from '../data/packages';
 
 interface Props {
-  payment: PaymentId;
+  payment: string;
   /** Optional package id, passed along as context for the Stripe record. */
   packageId?: string;
   label?: string;
   block?: boolean;
   ghost?: boolean;
 }
-const { payment: paymentId, packageId, label, block = false, ghost = false } = Astro.props;
-const payment = getPayment(paymentId);
-if (!payment) throw new Error(`Unknown payment id: ${paymentId}`);
+const { payment: itemId, packageId, label, block = false, ghost = false } = Astro.props;
+const item = getCheckoutItem(itemId);
+if (!item) throw new Error(`Unknown checkout item: ${itemId}`);
+const suffix = item.interval === 'month' ? '/mo' : item.interval === 'year' ? '/yr' : '';
 ---
 
 <form method="post" action="/api/pay" class="pay">
-  <input type="hidden" name="payment" value={payment.id} />
+  <input type="hidden" name="payment" value={item.id} />
   {packageId && <input type="hidden" name="package" value={packageId} />}
   <label class="hp" aria-hidden="true">
     Company site <input type="text" name="company_site" tabindex="-1" autocomplete="off" />
@@ -26,7 +28,7 @@ if (!payment) throw new Error(`Unknown payment id: ${paymentId}`);
     type="submit"
     class:list={['btn', ghost ? 'btn--ghost' : 'btn--primary', { 'btn--block': block }]}
   >
-    {label ?? `${payment.name} — ${formatUsd(payment.amount)}`}
+    {label ?? `${item.name} — ${formatUsd(item.amount)}${suffix}`}
   </button>
 </form>
 

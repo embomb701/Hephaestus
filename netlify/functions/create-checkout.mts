@@ -1,12 +1,19 @@
-// POST /api/pay — creates a Stripe Checkout session for one of the two fixed
-// site payments (reserve $50 / kickoff $450) and redirects the customer to
-// Stripe. Amounts come from src/data/packages.ts so the site and the checkout
-// can never disagree. Anything beyond these two is invoiced from the Stripe
+// POST /api/pay — creates a Stripe Checkout session for one of the items in
+// src/data/packages.ts (`checkoutItems`): a one-time site payment (reserve,
+// kickoff, base model), a monthly Vulcan Hosted tier, or the yearly care plan.
+// Amounts live only in that file so the site and the checkout never disagree.
+// Anything else (custom build balances, add-ons) is invoiced from the Stripe
 // dashboard, not through the site.
 
 import type { Config } from '@netlify/functions';
 import Stripe from 'stripe';
-import { formatUsd, getPackage, getPayment } from '../../src/data/packages';
+import { formatUsd, getCheckoutItem, getPackage } from '../../src/data/packages';
+
+const HOSTING_LABELS: Record<string, string> = {
+  local: 'Local',
+  'own-cloud': 'Your own cloud',
+  hosted: 'Vulcan Hosted',
+};
 
 export default async (req: Request): Promise<Response> => {
   if (req.method !== 'POST') {
@@ -27,48 +34,55 @@ export default async (req: Request): Promise<Response> => {
     return Response.redirect(new URL('/reserve/success', req.url).toString(), 303);
   }
 
-  const payment = getPayment(String(form.get('payment') ?? ''));
-  if (!payment) {
+  const item = getCheckoutItem(String(form.get('payment') ?? ''));
+  if (!item) {
     return new Response('Unknown payment', { status: 400 });
   }
-  // Package is optional context — it just labels the payment in Stripe.
+  // Optional context — labels the payment in Stripe so the follow-up is obvious.
   const pkg = getPackage(String(form.get('package') ?? ''));
+  const hosting = String(form.get('hosting') ?? '');
   const business = String(form.get('business') ?? '').trim().slice(0, 120);
 
   const origin = new URL(req.url).origin;
   const stripe = new Stripe(secret);
 
   const description = [
-    payment.description,
-    pkg ? `Package: ${pkg.name} (starting at ${formatUsd(pkg.startingAt)}).` : null,
+    item.description,
+    pkg ? `Package: ${pkg.name} (custom builds start at ${formatUsd(pkg.startingAt)}).` : null,
+    HOSTING_LABELS[hosting] ? `Hosting: ${HOSTING_LABELS[hosting]}.` : null,
   ]
     .filter(Boolean)
     .join(' ');
 
+  const recurring = item.interval === 'once' ? undefined : { interval: item.interval };
+
   const session = await stripe.checkout.sessions.create({
-    mode: 'payment',
-    submit_type: 'pay',
+    mode: recurring ? 'subscription' : 'payment',
+    ...(recurring ? {} : { submit_type: 'pay' as const }),
     line_items: [
       {
         quantity: 1,
         price_data: {
           currency: 'usd',
-          unit_amount: payment.amount * 100,
+          unit_amount: item.amount * 100,
           product_data: {
-            name: `Vulcan — ${payment.name}`,
+            name: `Vulcan — ${item.name}`,
             description,
           },
+          ...(recurring ? { recurring } : {}),
         },
       },
     ],
     phone_number_collection: { enabled: true },
     metadata: {
-      payment: payment.id,
+      payment: item.id,
       package: pkg?.id ?? '',
+      hosting,
       business,
     },
-    success_url: `${origin}/reserve/success?paid=${payment.id}&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/reserve/cancelled?payment=${payment.id}${pkg ? `&package=${pkg.id}` : ''}`,
+    ...(recurring ? { subscription_data: { metadata: { payment: item.id, package: pkg?.id ?? '', business } } } : {}),
+    success_url: `${origin}/reserve/success?paid=${item.id}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/reserve/cancelled?payment=${item.id}${pkg ? `&package=${pkg.id}` : ''}`,
   });
 
   if (!session.url) {

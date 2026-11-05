@@ -1,27 +1,95 @@
 ---
 import Base from '../layouts/Base.astro';
 import PackageCard from '../components/PackageCard.astro';
-import { packages, addOns, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/packages';
+import PayButton from '../components/PayButton.astro';
+import { packages, addOns, baseModel, hostingOptions, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/packages';
 ---
 
 <Base
   title="Packages & pricing"
-  description="Starter packages for field service, recruiting and bookings. Starting-at prices, one-time payment, no subscriptions. Reserve a build slot with a deposit."
+  description="Field service, recruiting and bookings packages. Buy once as a $500 base model or a custom build, then choose where it lives: your own computer, your own cloud, or Vulcan Hosted."
 >
   <section class="section section--tight">
     <div class="container">
       <p class="eyebrow">Packages &amp; pricing</p>
-      <h1>One price. Paid once.</h1>
+      <h1>Buy it once. Own it.</h1>
       <p class="lede">
-        Every package below is a starting point. After a free demo you get a written scope and a fixed price
-        for your build. {formatUsd(RESERVE_USD)} reserves your slot, {formatUsd(KICKOFF_USD)} kicks off the
-        build, and the balance is invoiced through Stripe. <a href="/pay">How payment works &rarr;</a>
+        Two ways to buy any package: the ready-made base model for a flat {formatUsd(baseModel.price)}, or a
+        custom build scoped around your business. Then choose <a href="/hosting">where it lives</a>, from
+        nothing a month to fully hosted.
       </p>
     </div>
   </section>
 
   <section class="section section--tight">
+    <div class="container ways">
+      <article class="card way way--base">
+        <p class="eyebrow">Option one</p>
+        <h2 class="way__name">{baseModel.name}</h2>
+        <p class="way__price">{formatUsd(baseModel.price)} <span>one time</span></p>
+        <p class="muted">{baseModel.summary}</p>
+        <ul class="check-list">
+          {baseModel.includes.map((i) => (
+            <li>{i}</li>
+          ))}
+        </ul>
+        <p class="way__not">
+          Not included: {baseModel.notIncluded.join(', ').toLowerCase()}. Those are what a custom build is for.
+        </p>
+        <div class="way__action">
+          <PayButton payment="base" label={`Buy a base model — ${formatUsd(baseModel.price)}`} block>
+            <div class="field">
+              <label for="package-base">Package</label>
+              <select id="package-base" name="package" required>
+                <option value="">Choose one</option>
+                {packages.map((pkg) => (
+                  <option value={pkg.id}>{pkg.name}</option>
+                ))}
+              </select>
+            </div>
+            <div class="field">
+              <label for="hosting-base">Where should it live?</label>
+              <select id="hosting-base" name="hosting" required>
+                <option value="">Choose one</option>
+                {hostingOptions.map((h) => (
+                  <option value={h.id}>{h.name}</option>
+                ))}
+              </select>
+            </div>
+          </PayButton>
+        </div>
+      </article>
+      <article class="card way">
+        <p class="eyebrow">Option two</p>
+        <h2 class="way__name">Custom build</h2>
+        <p class="way__price">from {formatUsd(Math.min(...packages.map((p) => p.startingAt)))} <span>one time</span></p>
+        <p class="muted">
+          Built around how your business actually runs: your workflows, your screens, your integrations, your
+          data moved in. After a free demo you get a written scope and a fixed price.
+        </p>
+        <ul class="check-list">
+          <li>Everything in the base model</li>
+          <li>Custom workflows, screens and reports</li>
+          <li>Integrations with software you already use</li>
+          <li>Data migration from spreadsheets or old systems</li>
+          <li>Add-ons: equipment tracking, inventory, portal and more</li>
+        </ul>
+        <p class="way__not">
+          {formatUsd(RESERVE_USD)} reserves your slot, {formatUsd(KICKOFF_USD)} kicks off the build, the balance
+          is invoiced. <a href="/pay">How payment works &rarr;</a>
+        </p>
+        <div class="way__action">
+          <a class="btn btn--primary btn--block" href="/contact">Book a free demo</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section section--tight">
     <div class="container">
+      <p class="eyebrow">Packages</p>
+      <h2>Pick your trade.</h2>
+      <p class="lede">Each package is available as a {formatUsd(baseModel.price)} base model or as a custom build at the starting price shown.</p>
       <div class="grid grid--3 pkgs">
         {packages.map((p) => (
           <PackageCard pkg={p} full featured={p.id === 'field-service'} />
@@ -54,10 +122,9 @@ import { packages, addOns, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/p
       <div class="storage card">
         <h3>About online storage</h3>
         <p class="muted">
-          Features that keep photos, documents or equipment history online need a database and file storage
-          that runs every month. We set that up in an account in <em>your</em> name, so you pay the provider
-          directly, usually $0 to $25 a month for a small business, and you never pay Vulcan a subscription.
-          If you stop working with us, nothing changes. It is still yours.
+          Features that keep photos, documents or equipment history online need storage that runs every
+          month. That is a hosting choice, not a software cost: run it in your own Google account and pay
+          Google directly, or let Vulcan host it on a monthly plan. <a href="/hosting">Compare hosting options &rarr;</a>
         </p>
       </div>
     </div>
@@ -71,13 +138,13 @@ import { packages, addOns, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/p
       </div>
       <div class="muted">
         <p>
-          When we hand over your system, it is finished and it is yours. From there you have three choices,
-          and none of them is required:
+          When we hand over your system, it is finished and it is yours. From there, none of this is
+          required:
         </p>
         <ul class="check-list">
-          <li>Run it yourself. Most clients do.</li>
-          <li>Pay for changes as you need them, one at a time.</li>
-          <li>Pick an optional support plan if you want us on call for fixes and questions.</li>
+          <li>Run it yourself, Local or in your own cloud. Many clients do.</li>
+          <li>Add a yearly <a href="/hosting#care">care plan</a> for updates, fixes and support.</li>
+          <li>Or go <a href="/hosting#tiers">Vulcan Hosted</a> and never think about any of it.</li>
         </ul>
       </div>
     </div>
@@ -93,8 +160,61 @@ import { packages, addOns, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/p
 </Base>
 
 <style>
+  .ways {
+    display: grid;
+    gap: 18px;
+  }
+  @media (min-width: 900px) {
+    .ways {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+  }
+  .way {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px;
+  }
+  .way--base {
+    border-color: rgba(233, 169, 75, 0.5);
+  }
+  .way .eyebrow {
+    margin-bottom: 6px;
+  }
+  .way__name {
+    font-size: 1.6rem;
+    margin-bottom: 0;
+  }
+  .way__price {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin: 6px 0 12px;
+  }
+  .way__price span {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .way .check-list {
+    margin: 10px 0 14px;
+  }
+  .way__not {
+    color: var(--faint);
+    font-size: 0.92rem;
+    margin: 0 0 10px;
+  }
+  .way__action {
+    margin-top: auto;
+    padding-top: 10px;
+  }
   .pkgs {
     align-items: stretch;
+    margin-top: 28px;
   }
   .addons {
     margin-top: 28px;

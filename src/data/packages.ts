@@ -20,9 +20,29 @@ export interface Package {
   goodFor: string[];
 }
 
-// The two fixed payments the website itself can take. Everything beyond these
-// is invoiced through Stripe for the agreed amount.
-export type PaymentId = 'reserve' | 'kickoff';
+// ---------------------------------------------------------------------------
+// Base model — the ready-made version of any package. Not custom.
+// TODO: confirm price.
+export const BASE_MODEL_USD = 500;
+
+export const baseModel = {
+  name: 'Base model',
+  price: BASE_MODEL_USD,
+  summary:
+    'The standard version of any package, set up with your logo, colours and company details. Ready in days, not weeks. Upgrade to a custom build later and the price comes off.',
+  includes: [
+    'Every standard feature of the package you pick',
+    'Your logo, colours and business details',
+    'Set up on the hosting option you choose',
+    'A short walkthrough call and written guide',
+  ],
+  notIncluded: ['Custom workflows or screens', 'Integrations with other software', 'Data migration from old systems'],
+};
+
+// ---------------------------------------------------------------------------
+// The fixed one-time payments the website itself can take. Everything beyond
+// these is invoiced through Stripe for the agreed amount.
+export type PaymentId = 'reserve' | 'kickoff' | 'base';
 
 export interface SitePayment {
   id: PaymentId;
@@ -48,7 +68,15 @@ export const sitePayments: SitePayment[] = [
     name: 'Kickoff payment',
     amount: 450,
     when: 'When you approve the written scope',
-    description: 'Starts the build. Applied to your final one-time price, like the reservation.',
+    description: 'Starts your custom build. Applied to your final one-time price, like the reservation.',
+  },
+  {
+    id: 'base',
+    name: 'Base model',
+    amount: BASE_MODEL_USD,
+    when: 'Any time',
+    description:
+      'The full price of a base model: the standard version of one package with your branding. Pick the package and where you want it to live below.',
   },
 ];
 
@@ -57,6 +85,138 @@ export const KICKOFF_USD = sitePayments[1].amount;
 
 export function getPayment(id: string): SitePayment | undefined {
   return sitePayments.find((p) => p.id === id);
+}
+
+// ---------------------------------------------------------------------------
+// Where the system lives. Three options, from "nothing per month" to "we run
+// everything". Hosted tiers are priced mainly by team size and storage.
+// TODO: all monthly / yearly amounts are PLACEHOLDERS pending confirmation.
+export type HostingId = 'local' | 'own-cloud' | 'hosted';
+
+export interface HostingOption {
+  id: HostingId;
+  name: string;
+  tagline: string;
+  monthly: number | null; // null = "varies" (hosted tiers)
+  monthlyNote: string;
+  bestFor: string;
+  includes: string[];
+  limits: string[];
+}
+
+export const hostingOptions: HostingOption[] = [
+  {
+    id: 'local',
+    name: 'Local',
+    tagline: 'Runs on your own computer or tablet. Nothing per month.',
+    monthly: 0,
+    monthlyNote: 'No monthly cost. Your own domain if you want one.',
+    bestFor: 'A solo operator or a single office computer.',
+    includes: [
+      'Your data stays on your device',
+      'Automatic backup file on your computer',
+      'Optional backup to your Google Drive',
+      'Works offline',
+    ],
+    limits: ['One device at a time; no live sync between office and field', 'Photos and files limited by device space'],
+  },
+  {
+    id: 'own-cloud',
+    name: 'Your own cloud',
+    tagline: 'Your Google account, your domain. You pay Google directly.',
+    monthly: 0,
+    monthlyNote: 'Nothing to Vulcan. Google bills you directly, typically $0 to $25 a month for a small business.',
+    bestFor: 'A team that wants the office and the field on one system and wants to own every account.',
+    includes: [
+      'Database and file storage in your own Firebase account',
+      'Your own domain',
+      'Techs and office share one live system',
+      'We set it up; you hold the keys',
+    ],
+    limits: ['You manage the Google billing account', 'Updates and support are a separate care plan'],
+  },
+  {
+    id: 'hosted',
+    name: 'Vulcan Hosted',
+    tagline: 'We run it. Hosting, storage, backups, updates and support, one bill.',
+    monthly: null,
+    monthlyNote: 'Priced by team size and storage. Cancel any time; your data exports with you.',
+    bestFor: 'A business that wants it to just work and never think about servers.',
+    includes: [
+      'Hosting, database and file storage',
+      'Nightly backups',
+      'Updates and fixes included',
+      'Phone and email support',
+      'Annual renewal included',
+    ],
+    limits: [],
+  },
+];
+
+export interface HostedTier {
+  id: 'hosted-small' | 'hosted-shop' | 'hosted-fleet';
+  name: string;
+  monthly: number;
+  users: number;
+  storageGb: number;
+  support: string;
+}
+
+export const hostedTiers: HostedTier[] = [
+  { id: 'hosted-small', name: 'Small', monthly: 49, users: 3, storageGb: 10, support: 'Email support' },
+  { id: 'hosted-shop', name: 'Shop', monthly: 99, users: 10, storageGb: 50, support: 'Phone and email support' },
+  { id: 'hosted-fleet', name: 'Fleet', monthly: 199, users: 25, storageGb: 250, support: 'Priority phone and email support' },
+];
+
+// Optional yearly plan for Local and Own-cloud customers. The software keeps
+// working without it; this covers keeping it current.
+export const carePlan = {
+  id: 'care-plan' as const,
+  name: 'Care plan',
+  yearly: 299,
+  includes: ['Updates and security fixes', 'Bug fixes', 'Phone and email support', 'Small tweaks (an hour a month)'],
+};
+
+// ---------------------------------------------------------------------------
+// Everything Stripe Checkout can be asked for, one-time or recurring.
+export interface CheckoutItem {
+  id: string;
+  name: string;
+  amount: number;
+  interval: 'once' | 'month' | 'year';
+  description: string;
+}
+
+export const checkoutItems: CheckoutItem[] = [
+  ...sitePayments.map<CheckoutItem>((p) => ({
+    id: p.id,
+    name: p.name,
+    amount: p.amount,
+    interval: 'once',
+    description: p.description,
+  })),
+  ...hostedTiers.map<CheckoutItem>((t) => ({
+    id: t.id,
+    name: `Vulcan Hosted — ${t.name}`,
+    amount: t.monthly,
+    interval: 'month',
+    description: `Up to ${t.users} users, ${t.storageGb} GB storage, ${t.support.toLowerCase()}. Hosting, backups, updates and renewal included. Cancel any time.`,
+  })),
+  {
+    id: carePlan.id,
+    name: carePlan.name,
+    amount: carePlan.yearly,
+    interval: 'year',
+    description: 'Updates, fixes and support for a system you host yourself. Renews yearly; cancel any time.',
+  },
+];
+
+export function getCheckoutItem(id: string): CheckoutItem | undefined {
+  return checkoutItems.find((c) => c.id === id);
+}
+
+export function formatMonthly(amount: number): string {
+  return `${formatUsd(amount)}/mo`;
 }
 
 export const packages: Package[] = [

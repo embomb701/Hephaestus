@@ -5,7 +5,7 @@ export const site = {
   name: 'Vulcan',
   tagline: 'Business software, forged once. Yours forever.',
   description:
-    'Vulcan builds custom CRM, scheduling, online booking, work-ticket and equipment-tracking systems for small businesses. One-time payment. No subscriptions. You own it.',
+    'Vulcan builds CRM, scheduling, online booking, work-ticket and equipment-tracking systems for small businesses. Buy it once and own it. Run it on your own computer for nothing a month, or let us host it. No required subscription.',
 
   // TODO: real contact details
   phone: '(000) 000-0000',

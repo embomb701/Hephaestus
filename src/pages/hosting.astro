@@ -1,0 +1,307 @@
+---
+import Base from '../layouts/Base.astro';
+import PayButton from '../components/PayButton.astro';
+import { hostingOptions, hostedTiers, carePlan, packages, formatUsd, formatMonthly } from '../data/packages';
+---
+
+<Base
+  title="Hosting & plans"
+  description="Run your Vulcan system on your own computer for nothing a month, in your own Google account, or let Vulcan host it with storage, backups, updates and support included."
+>
+  <section class="section section--tight">
+    <div class="container">
+      <p class="eyebrow">Hosting &amp; plans</p>
+      <h1>Where your system lives is up to you.</h1>
+      <p class="lede">
+        Buy the software once and it is yours. Then pick where it runs: on your own device for nothing a month,
+        in your own Google account, or on Vulcan's servers with everything handled. You can move between
+        them later.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container grid grid--3 opts">
+      {hostingOptions.map((h) => (
+        <article class:list={['card', 'opt', { 'opt--hosted': h.id === 'hosted' }]} id={h.id}>
+          <h2 class="opt__name">{h.name}</h2>
+          <p class="opt__tag">{h.tagline}</p>
+          <p class="opt__price">
+            {h.monthly === null ? (
+              <>
+                <span class="opt__amount">from {formatMonthly(hostedTiers[0].monthly)}</span>
+              </>
+            ) : (
+              <span class="opt__amount">{formatUsd(h.monthly)}/mo</span>
+            )}
+          </p>
+          <p class="opt__note">{h.monthlyNote}</p>
+          <p class="opt__best"><b>Best for:</b> {h.bestFor}</p>
+          <ul class="check-list">
+            {h.includes.map((i) => (
+              <li>{i}</li>
+            ))}
+          </ul>
+          {h.limits.length > 0 && (
+            <ul class="opt__limits">
+              {h.limits.map((l) => (
+                <li>{l}</li>
+              ))}
+            </ul>
+          )}
+          <div class="opt__action">
+            {h.id === 'hosted' ? (
+              <a class="btn btn--primary btn--block" href="#tiers">See hosted tiers</a>
+            ) : (
+              <a class="btn btn--ghost btn--block" href="/contact">Ask about {h.name.toLowerCase()}</a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--alt" id="tiers">
+    <div class="container">
+      <p class="eyebrow">Vulcan Hosted</p>
+      <h2>Priced by how big you are, not by what you use it for.</h2>
+      <p class="lede">
+        Every tier includes hosting, database and file storage, nightly backups, updates and fixes, support
+        and the annual renewal. Cancel any time and your data exports with you.
+      </p>
+      <div class="grid grid--3 tiers">
+        {hostedTiers.map((t, i) => (
+          <article class:list={['card', 'tier', { 'tier--mid': i === 1 }]}>
+            {i === 1 && <span class="tier__flag">Most teams</span>}
+            <h3 class="tier__name">{t.name}</h3>
+            <p class="tier__price">
+              <span class="tier__amount">{formatUsd(t.monthly)}</span>
+              <span class="tier__per">/ month</span>
+            </p>
+            <ul class="check-list tier__list">
+              <li>Up to {t.users} users</li>
+              <li>{t.storageGb} GB photo and file storage</li>
+              <li>{t.support}</li>
+              <li>Hosting, backups, updates, renewal</li>
+            </ul>
+            <PayButton payment={t.id} block>
+              <div class="field">
+                <label for={`business-${t.id}`}>Business name</label>
+                <input id={`business-${t.id}`} name="business" type="text" autocomplete="organization" required />
+              </div>
+              <div class="field">
+                <label for={`package-${t.id}`}>Package</label>
+                <select id={`package-${t.id}`} name="package">
+                  <option value="">Not sure yet</option>
+                  {packages.map((pkg) => (
+                    <option value={pkg.id}>{pkg.name}</option>
+                  ))}
+                </select>
+              </div>
+              <input type="hidden" name="hosting" value="hosted" />
+            </PayButton>
+          </article>
+        ))}
+      </div>
+      <p class="faint tiers__fine">
+        Need more users or storage? <a href="/contact">Tell us the size of your team</a> and we will quote a
+        tier for it.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="care">
+    <div class="container care">
+      <div>
+        <p class="eyebrow">For self-hosted systems</p>
+        <h2>{carePlan.name}: {formatUsd(carePlan.yearly)} a year, optional.</h2>
+        <p class="lede">
+          If you run it yourself, Local or in your own cloud, the software keeps working whether or not you
+          buy anything else. The care plan is for keeping it current.
+        </p>
+        <ul class="check-list">
+          {carePlan.includes.map((i) => (
+            <li>{i}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="card care__box">
+        <h3>Start a care plan</h3>
+        <p class="muted">Renews yearly. Cancel any time from the link on your receipt.</p>
+        <PayButton payment={carePlan.id} block>
+          <div class="field">
+            <label for="business-care">Business name</label>
+            <input id="business-care" name="business" type="text" autocomplete="organization" required />
+          </div>
+          <div class="field">
+            <label for="hosting-care">Where it runs</label>
+            <select id="hosting-care" name="hosting">
+              <option value="local">Local</option>
+              <option value="own-cloud">My own cloud</option>
+            </select>
+          </div>
+        </PayButton>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt cta">
+    <div class="container">
+      <h2>Not sure which one you need?</h2>
+      <p class="lede">
+        Most solo operators start Local. Most teams with techs in the field go Hosted or own-cloud. A free demo
+        sorts it out in twenty minutes.
+      </p>
+      <a class="btn btn--primary" href="/contact">Book a free demo</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .opts {
+    align-items: stretch;
+  }
+  .opt {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 28px;
+  }
+  .opt--hosted {
+    border-color: rgba(255, 106, 31, 0.55);
+    box-shadow: 0 0 0 1px rgba(255, 106, 31, 0.25), 0 30px 60px -40px rgba(255, 106, 31, 0.6);
+  }
+  .opt__name {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+  .opt__tag {
+    color: var(--muted);
+    margin: 0;
+  }
+  .opt__price {
+    margin: 14px 0 4px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .opt__amount {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .opt__note {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin: 0 0 10px;
+  }
+  .opt__best {
+    font-size: 0.95rem;
+    margin: 0 0 12px;
+    color: var(--muted);
+  }
+  .opt__best b {
+    color: var(--text);
+  }
+  .opt__limits {
+    margin: 12px 0 0;
+    padding-left: 18px;
+    color: var(--faint);
+    font-size: 0.9rem;
+    display: grid;
+    gap: 4px;
+  }
+  .opt__action {
+    margin-top: auto;
+    padding-top: 20px;
+  }
+
+  .tiers {
+    margin-top: 32px;
+    align-items: stretch;
+  }
+  .tier {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+  }
+  .tier--mid {
+    border-color: rgba(233, 169, 75, 0.5);
+  }
+  .tier__flag {
+    position: absolute;
+    top: -12px;
+    left: 24px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--gold);
+    color: #1a0d05;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .tier__name {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    letter-spacing: 0.04em;
+  }
+  .tier__price {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0 0 16px;
+  }
+  .tier__amount {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .tier__per {
+    color: var(--muted);
+  }
+  .tier__list {
+    margin-bottom: 20px;
+  }
+  .tier :global(form) {
+    margin-top: auto;
+  }
+  .tiers__fine {
+    margin: 20px 0 0;
+    font-size: 0.92rem;
+  }
+
+  .care {
+    display: grid;
+    gap: 28px 48px;
+  }
+  @media (min-width: 900px) {
+    .care {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: start;
+    }
+  }
+  .care .check-list {
+    margin-top: 12px;
+  }
+  .care__box {
+    padding: 28px;
+  }
+  .care__box h3 {
+    margin-bottom: 4px;
+  }
+  .care__box p {
+    margin-bottom: 18px;
+  }
+
+  .cta {
+    text-align: center;
+  }
+  .cta .lede {
+    margin-inline: auto;
+  }
+</style>

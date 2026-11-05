@@ -1,75 +1,108 @@
 ---
 import Base from '../layouts/Base.astro';
 import PayButton from '../components/PayButton.astro';
-import { packages, sitePayments, formatUsd } from '../data/packages';
+import { packages, sitePayments, hostingOptions, formatUsd } from '../data/packages';
 import { site } from '../data/site';
+
+const custom = sitePayments.filter((p) => p.id !== 'base');
+const base = sitePayments.find((p) => p.id === 'base')!;
 ---
 
 <Base
   title="Make a payment"
-  description="Reserve a build slot or make your kickoff payment by card through Stripe. Everything beyond that is invoiced for the agreed amount."
+  description="Pay for a base model, reserve a custom build slot, or make your kickoff payment by card through Stripe. Everything else is invoiced for the agreed amount."
 >
   <section class="section section--tight">
     <div class="container">
       <p class="eyebrow">Payments</p>
       <h1>Pay by card, through Stripe.</h1>
       <p class="lede">
-        Two payments happen through this site. Everything else, including the balance of your build, is
-        invoiced through Stripe for the exact amount we agreed in writing, so there is never a surprise charge.
+        These are the payments that happen on this site. The balance of a custom build, add-ons and later
+        changes are invoiced through Stripe for the exact amount we agreed in writing, so there is never a
+        surprise charge. Monthly hosting plans are on the <a href="/hosting">hosting page</a>.
       </p>
     </div>
   </section>
 
   <section class="section section--tight">
-    <div class="container grid grid--2 pays">
-      {sitePayments.map((p, i) => (
-        <article class="card pay-card">
-          <span class="pay-card__step">Step {i + 1}</span>
-          <h2 class="pay-card__name">{p.name}</h2>
-          <p class="pay-card__amount">{formatUsd(p.amount)}</p>
-          <p class="pay-card__when">{p.when}</p>
-          <p class="muted">{p.description}</p>
-          <PayButton payment={p.id} block>
-            <div class="field">
-              <label for={`business-${p.id}`}>Business name</label>
-              <input id={`business-${p.id}`} name="business" type="text" autocomplete="organization" required />
-            </div>
-            <div class="field">
-              <label for={`package-${p.id}`}>Package</label>
-              <select id={`package-${p.id}`} name="package">
-                <option value="">Not sure yet</option>
-                {packages.map((pkg) => (
-                  <option value={pkg.id}>{pkg.name}</option>
-                ))}
-              </select>
-            </div>
-          </PayButton>
-        </article>
-      ))}
+    <div class="container">
+      <p class="eyebrow">Base model</p>
+      <h2>One payment. Ready in days.</h2>
+      <div class="card pay-card pay-card--wide">
+        <div>
+          <h3 class="pay-card__name">{base.name}</h3>
+          <p class="pay-card__amount">{formatUsd(base.amount)}</p>
+          <p class="pay-card__when">{base.when}</p>
+          <p class="muted">{base.description}</p>
+        </div>
+        <PayButton payment={base.id} block>
+          <div class="field">
+            <label for="business-base">Business name</label>
+            <input id="business-base" name="business" type="text" autocomplete="organization" required />
+          </div>
+          <div class="field">
+            <label for="package-base">Package</label>
+            <select id="package-base" name="package" required>
+              <option value="">Choose one</option>
+              {packages.map((pkg) => (
+                <option value={pkg.id}>{pkg.name}</option>
+              ))}
+            </select>
+          </div>
+          <div class="field">
+            <label for="hosting-base">Where should it live?</label>
+            <select id="hosting-base" name="hosting" required>
+              <option value="">Choose one</option>
+              {hostingOptions.map((h) => (
+                <option value={h.id}>
+                  {h.name}
+                  {h.id === 'hosted' ? ' (monthly plan, set up after)' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+        </PayButton>
+      </div>
     </div>
   </section>
 
-  <section class="section section--alt">
-    <div class="container how">
-      <div>
-        <p class="eyebrow">How payment works</p>
-        <h2>Small steps in. No lump sum up front.</h2>
+  <section class="section section--tight section--alt">
+    <div class="container">
+      <p class="eyebrow">Custom build</p>
+      <h2>Small steps in. No lump sum up front.</h2>
+      <div class="grid grid--2 pays">
+        {custom.map((p, i) => (
+          <article class="card pay-card">
+            <span class="pay-card__step">Step {i + 1}</span>
+            <h3 class="pay-card__name">{p.name}</h3>
+            <p class="pay-card__amount">{formatUsd(p.amount)}</p>
+            <p class="pay-card__when">{p.when}</p>
+            <p class="muted">{p.description}</p>
+            <PayButton payment={p.id} block>
+              <div class="field">
+                <label for={`business-${p.id}`}>Business name</label>
+                <input id={`business-${p.id}`} name="business" type="text" autocomplete="organization" required />
+              </div>
+              <div class="field">
+                <label for={`package-${p.id}`}>Package</label>
+                <select id={`package-${p.id}`} name="package">
+                  <option value="">Not sure yet</option>
+                  {packages.map((pkg) => (
+                    <option value={pkg.id}>{pkg.name}</option>
+                  ))}
+                </select>
+              </div>
+            </PayButton>
+          </article>
+        ))}
       </div>
       <ol class="how__list">
-        <li>
-          <b>Free demo.</b> No payment. We look at how your business runs and what you need.
-        </li>
-        <li>
-          <b>Reserve — {formatUsd(sitePayments[0].amount)}.</b> Holds your slot while we write the scope. Paid
-          here by card.
-        </li>
-        <li>
-          <b>Kickoff — {formatUsd(sitePayments[1].amount)}.</b> You approve the written scope and fixed price;
-          this starts the build. Paid here by card.
-        </li>
+        <li><b>Free demo.</b> No payment. We look at how your business runs and what you need.</li>
+        <li><b>Reserve — {formatUsd(custom[0].amount)}.</b> Holds your slot while we write the scope.</li>
+        <li><b>Kickoff — {formatUsd(custom[1].amount)}.</b> You approve the written scope and fixed price; this starts the build.</li>
         <li>
           <b>Balance — invoiced.</b> The rest of your one-time price, exactly as scoped, sent as a Stripe
-          invoice you can pay by card or bank transfer. Add-ons and later changes are invoiced the same way.
+          invoice you can pay by card or bank transfer.
         </li>
       </ol>
     </div>
@@ -89,12 +122,24 @@ import { site } from '../data/site';
 <style>
   .pays {
     align-items: stretch;
+    margin-top: 24px;
   }
   .pay-card {
     display: flex;
     flex-direction: column;
     gap: 4px;
     padding: 28px;
+  }
+  .pay-card--wide {
+    margin-top: 24px;
+    display: grid;
+    gap: 24px 48px;
+  }
+  @media (min-width: 900px) {
+    .pay-card--wide {
+      grid-template-columns: 1.1fr 1fr;
+      align-items: start;
+    }
   }
   .pay-card__step {
     font-family: var(--font-display);
@@ -104,7 +149,9 @@ import { site } from '../data/site';
     color: var(--ember);
   }
   .pay-card__name {
+    font-family: var(--font-display);
     font-size: 1.5rem;
+    letter-spacing: 0.04em;
     margin-bottom: 0;
   }
   .pay-card__amount {
@@ -126,22 +173,13 @@ import { site } from '../data/site';
     margin-top: auto;
     padding-top: 10px;
   }
-  .how {
-    display: grid;
-    gap: 24px 48px;
-  }
-  @media (min-width: 900px) {
-    .how {
-      grid-template-columns: 1fr 1.2fr;
-      align-items: start;
-    }
-  }
   .how__list {
-    margin: 0;
+    margin: 32px 0 0;
     padding-left: 22px;
     display: grid;
-    gap: 14px;
+    gap: 10px;
     color: var(--muted);
+    max-width: 70ch;
   }
   .how__list b {
     color: var(--text);

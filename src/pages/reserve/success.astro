@@ -19,6 +19,38 @@ import { site } from '../../data/site';
         </ol>
       </div>
 
+      <div data-paid="base" class="status__variant" hidden>
+        <h1>Your base model is on the anvil.</h1>
+        <p class="lede">Stripe has emailed you a receipt. We will have it set up and branded for you within days.</p>
+        <h3>What happens next</h3>
+        <ol class="muted status__steps">
+          <li>We email you within one business day for your logo, colours and business details.</li>
+          <li>If you chose Vulcan Hosted, we send you the link to start your monthly plan; otherwise we set it up on your device or your Google account.</li>
+          <li>A short walkthrough call and a written guide, then it is yours.</li>
+        </ol>
+      </div>
+
+      <div data-paid="hosted-small" data-paid-alt="hosted-shop hosted-fleet" class="status__variant" hidden>
+        <h1>You're on Vulcan Hosted.</h1>
+        <p class="lede">Stripe has emailed your receipt and will bill monthly. Cancel any time from the link on it.</p>
+        <h3>What happens next</h3>
+        <ol class="muted status__steps">
+          <li>We email you within one business day with your system's address and logins.</li>
+          <li>Your data, photos and backups now live on our servers; updates and support are included.</li>
+          <li>Outgrow your tier? Tell us and we move you up with no downtime.</li>
+        </ol>
+      </div>
+
+      <div data-paid="care-plan" class="status__variant" hidden>
+        <h1>Care plan active.</h1>
+        <p class="lede">Stripe has emailed your receipt and will renew yearly. Cancel any time from the link on it.</p>
+        <h3>What happens next</h3>
+        <ol class="muted status__steps">
+          <li>We email you within one business day to confirm which system is covered.</li>
+          <li>Updates and fixes come to you as they are ready; support is a call or email away.</li>
+        </ol>
+      </div>
+
       <div data-paid="kickoff" class="status__variant" hidden>
         <h1>The forge is lit.</h1>
         <p class="lede">Stripe has emailed you a receipt. Your build is now in progress.</p>
@@ -42,10 +74,13 @@ import { site } from '../../data/site';
 
   <script>
     // Show the copy that matches which payment was just made (?paid=reserve|kickoff).
-    const paid = new URLSearchParams(location.search).get('paid');
-    const target = document.querySelector<HTMLElement>(`[data-paid="${paid}"]`);
+    const paid = new URLSearchParams(location.search).get('paid') ?? '';
+    const variants = [...document.querySelectorAll<HTMLElement>('.status__variant')];
+    const target = variants.find(
+      (el) => el.dataset.paid === paid || (el.dataset.paidAlt ?? '').split(' ').includes(paid),
+    );
     if (paid && target) {
-      document.querySelectorAll<HTMLElement>('.status__variant').forEach((el) => (el.hidden = el !== target));
+      variants.forEach((el) => (el.hidden = el !== target));
     }
   </script>
 </Base>

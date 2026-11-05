@@ -4,7 +4,7 @@ import PackageCard from '../components/PackageCard.astro';
 import MockDispatch from '../components/MockDispatch.astro';
 import MockPipeline from '../components/MockPipeline.astro';
 import MockBooking from '../components/MockBooking.astro';
-import { packages, formatUsd, RESERVE_USD, KICKOFF_USD } from '../data/packages';
+import { packages, hostingOptions, hostedTiers, formatUsd, formatMonthly, RESERVE_USD, KICKOFF_USD, BASE_MODEL_USD } from '../data/packages';
 import { industries } from '../data/industries';
 import { site } from '../data/site';
 
@@ -50,12 +50,16 @@ const faqs = [
     a: 'Yes. The code, the data and the accounts it runs on are all in your name. If we disappeared tomorrow, your system would keep running.',
   },
   {
-    q: 'One-time payment — what is the catch?',
-    a: 'There is not one, but there is one honest detail: features that store photos, documents or equipment history online need a database and file storage. We set that up in an account you own, so you pay the provider directly, usually $0 to $25 a month for a small business. You never pay Vulcan a subscription.',
+    q: 'Buy it once — so what is the monthly cost?',
+    a: `Zero, if you want it to be. Run it Local on your own computer and there is no monthly cost at all. Run it in your own Google account and Google bills you directly, usually $0 to $25 a month. Or let Vulcan host it from ${formatMonthly(hostedTiers[0].monthly)} with storage, backups, updates and support included. The software is yours in every case.`,
+  },
+  {
+    q: 'What is the difference between the base model and a custom build?',
+    a: `The base model is the standard version of a package with your logo and details, ready in days for a flat ${formatUsd(BASE_MODEL_USD)}. A custom build is scoped around how your business actually runs: your workflows, integrations and data moved in. If you start with a base model and upgrade later, the ${formatUsd(BASE_MODEL_USD)} comes off.`,
   },
   {
     q: 'What if I need changes later?',
-    a: 'Your call. Pay for changes as you need them, or pick an optional support plan if you want us on call. Neither is required.',
+    a: 'Your call. Pay for changes as you need them, add a yearly care plan for updates and support, or go Vulcan Hosted where all of that is included. None of it is required.',
   },
   {
     q: 'How long does a build take?',
@@ -81,11 +85,12 @@ const faqs = [
   <section class="hero">
     <div class="container hero__inner">
       <div class="hero__copy">
-        <p class="eyebrow">Custom business software · One-time payment</p>
+        <p class="eyebrow">Business software · Buy it once</p>
         <h1>Tools for your trade.<br />Forged once. Yours forever.</h1>
         <p class="lede">
-          Vulcan builds the CRM, scheduling, booking and work-ticket system your business actually needs,
-          around the way you already work. One payment. No subscriptions. No per-user fees. You own it.
+          Vulcan builds the CRM, scheduling, booking and work-ticket system your business actually needs.
+          Buy it once and own it, from a {formatUsd(BASE_MODEL_USD)} base model to a full custom build. Run it
+          on your own computer for nothing a month, or let us host it. No required subscription.
         </p>
         <div class="hero__actions">
           <a class="btn btn--primary" href="/contact">Book a free demo</a>
@@ -213,12 +218,12 @@ const faqs = [
     </div>
   </section>
 
-  <!-- One payment -->
+  <!-- Ownership -->
   <section class="section">
     <div class="container once">
       <div>
-        <p class="eyebrow">One payment</p>
-        <h2>No subscriptions. No per-seat fees. No rent on your own tools.</h2>
+        <p class="eyebrow">Buy it once</p>
+        <h2>No rent on your own tools.</h2>
       </div>
       <div class="once__copy">
         <p>
@@ -226,11 +231,30 @@ const faqs = [
           built for someone else. Add a tech, pay more. Stop paying, lose your data.
         </p>
         <p>
-          Vulcan builds your system once, around how you work, for a fixed one-time price. The code, the data
-          and the accounts are yours. Keep it as long as you like. Change it when you need to. Pay for
-          support only if you want it.
+          Vulcan sells you the software once, as a {formatUsd(BASE_MODEL_USD)} base model or a custom build.
+          The code and the data are yours. Then you decide where it runs and what, if anything, you pay per
+          month.
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- Hosting -->
+  <section class="section section--alt" id="hosting">
+    <div class="container">
+      <p class="eyebrow">Where it lives</p>
+      <h2>From nothing a month to fully hosted.</h2>
+      <div class="grid grid--3 host">
+        {hostingOptions.map((h) => (
+          <a class="card host__item" href={`/hosting#${h.id}`}>
+            <h3>{h.name}</h3>
+            <p class="host__price">{h.monthly === null ? `from ${formatMonthly(hostedTiers[0].monthly)}` : `${formatUsd(h.monthly)}/mo`}</p>
+            <p class="muted">{h.tagline}</p>
+            <p class="host__best">{h.bestFor}</p>
+          </a>
+        ))}
+      </div>
+      <p class="pkgs__more"><a href="/hosting">Compare hosting options and plans &rarr;</a></p>
     </div>
   </section>
 
@@ -411,6 +435,41 @@ const faqs = [
   .once__copy {
     color: var(--muted);
     font-size: 1.05rem;
+  }
+
+  .host {
+    margin-top: 28px;
+    align-items: stretch;
+  }
+  .host__item {
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.15s ease;
+  }
+  .host__item:hover {
+    border-color: var(--gold);
+    color: var(--text);
+  }
+  .host__item h3 {
+    margin-bottom: 0;
+  }
+  .host__item p {
+    margin: 0;
+  }
+  .host__price {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 8px !important;
+  }
+  .host__best {
+    margin-top: 10px !important;
+    font-size: 0.92rem;
+    color: var(--faint);
   }
 
   .inds {

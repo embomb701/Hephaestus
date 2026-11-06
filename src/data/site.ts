@@ -7,9 +7,9 @@ export const site = {
   description:
     'Vulcan builds CRM, scheduling, online booking, work-ticket and equipment-tracking systems for small businesses. Buy it once and own it. Run it on your own computer for nothing a month, or let us host it. No required subscription.',
 
-  // TODO: real contact details
-  phone: '(000) 000-0000',
-  phoneHref: 'tel:+10000000000',
+  phone: '(802) 416-0914',
+  phoneHref: 'tel:+18024160914',
+  // TODO: real email once the domain + Resend forwarding are set up
   email: 'hello@vulcan.example',
 
   // TODO: real domain (also update `site` in astro.config.mjs)

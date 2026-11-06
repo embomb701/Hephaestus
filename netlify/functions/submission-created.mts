@@ -36,6 +36,7 @@ export default async (event: SubmissionEvent) => {
   }
 
   const payload = await readPayload(event);
+  console.log(`submission-created: form=${payload.form_name} key=${apiKey ? 'present' : 'MISSING'} notify=${process.env.NOTIFY_EMAIL ?? site.email}`);
   if (payload.form_name !== 'demo-request') {
     return new Response('ignored', { status: 200 });
   }
@@ -92,9 +93,11 @@ export default async (event: SubmissionEvent) => {
     : Promise.resolve(null);
 
   const results = await Promise.allSettled([notify, reply]);
-  for (const r of results) {
-    if (r.status === 'rejected') console.error('submission-created: email failed', r.reason);
-    else if (r.value && 'error' in r.value && r.value.error) console.error('submission-created: resend error', r.value.error);
-  }
+  results.forEach((r, i) => {
+    const which = i === 0 ? 'notify' : 'auto-reply';
+    if (r.status === 'rejected') console.error(`submission-created: ${which} threw`, String(r.reason));
+    else if (r.value && 'error' in r.value && r.value.error) console.error(`submission-created: ${which} resend error`, JSON.stringify(r.value.error));
+    else console.log(`submission-created: ${which} sent id=${r.value && 'data' in r.value ? r.value.data?.id : 'n/a'}`);
+  });
   return new Response('ok', { status: 200 });
 };

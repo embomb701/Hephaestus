@@ -9,11 +9,9 @@ export const site = {
 
   phone: '(802) 416-0914',
   phoneHref: 'tel:+18024160914',
-  // TODO: real email once the domain + Resend forwarding are set up
-  email: 'hello@vulcan.example',
+  email: 'hello@vf-customs.com',
 
-  // TODO: real domain (also update `site` in astro.config.mjs)
-  url: 'https://vulcan.example',
+  url: 'https://vf-customs.com',
 
   // Where you're based / who you serve. Used in the footer and SEO copy.
   // TODO: confirm service area

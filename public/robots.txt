@@ -2,4 +2,4 @@
 User-agent: *
 Disallow: /
 
-# Sitemap: https://vulcan.example/sitemap-index.xml
+# Sitemap: https://vf-customs.com/sitemap-index.xml

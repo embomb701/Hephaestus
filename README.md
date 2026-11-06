@@ -56,8 +56,6 @@ disagree.
 
 Search the repo for `TODO`. The list today:
 
-- [ ] Real email — `src/data/site.ts` (phone is set)
-- [ ] Real domain — `src/data/site.ts` **and** `site` in `astro.config.mjs`
 - [ ] Confirm service area wording — `src/data/site.ts`
 - [ ] **Confirm prices** — `src/data/packages.ts`: custom starting-at prices, add-ons, hosted tier prices/limits, care plan. (Base $500 and the $50 / $450 custom payments are confirmed.)
 - [ ] Confirm the FAQ policies on the home page: build timeline ("three to six weeks") and reservation refund terms

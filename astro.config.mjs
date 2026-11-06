@@ -3,8 +3,7 @@ import { defineConfig } from 'astro/config';
 
 // Static site. Stripe checkout lives in netlify/functions, so no adapter is needed.
 export default defineConfig({
-  // TODO: replace with the real domain once it's registered.
-  site: 'https://vulcan.example',
+  site: 'https://vf-customs.com',
   output: 'static',
   trailingSlash: 'never',
   build: {
